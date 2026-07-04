@@ -1,2 +1,2 @@
 # studyflow
-AI-powered study assistant that turns notes into summaries and flashcards.
+ Turn your class notes into AI-powered summaries and flashcards in seconds.

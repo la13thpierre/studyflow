@@ -36,5 +36,39 @@ button{
     border-radius:10px;
 
     cursor:pointer;
-
+.container {
+    max-width: 700px;
+    margin: auto;
+    text-align: center;
+    padding: 80px 20px;
+}
+h1 {
+    font-size: 56px;
+    margin-bottom: 10px;
+}
+.subtitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #38BDF8;
+    margin-bottom: 20px;
+}
+.description {
+    font-size: 18px;
+    color: #CBD5E1;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+button {
+    background-color: #2563EB;
+    color: white;
+    border: none;
+    padding: 16px 36px;
+    font-size: 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover {
+    background-color: #1D4ED8;
+    transform: scale(1.05);
 }
