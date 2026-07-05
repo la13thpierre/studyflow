@@ -24,19 +24,35 @@
     Turn your class notes into AI-powered summaries and flashcards in seconds.
 </p>
 
-    <button>Upload Notes →</button>
+    <input type="file" id="fileInput" hidden>
 
+<button onclick="document.getElementById('fileInput').click()">
+    Upload Notes
+</button>
+
+<p id="fileName"></p>
     <div class="features">
 
-        <p>✓ Instant summaries</p>
+    <div class="card">
+        <div class="icon">⚡</div>
+        <h3>Instant Summaries</h3>
+        <p>Turn long notes into short, clear AI summaries in seconds.</p>
+    </div>
 
-        <p>✓ Smart flashcards</p>
+    <div class="card">
+        <div class="icon">🧠</div>
+        <h3>Smart Flashcards</h3>
+        <p>Create revision flashcards automatically from your notes.</p>
+    </div>
 
-        <p>✓ Save hours revising</p>
-
+    <div class="card">
+        <div class="icon">⏱️</div>
+        <h3>Save Hours</h3>
+        <p>Spend less time preparing to study and more time learning.</p>
     </div>
 
 </div>
 
 <script src="script.js"></script>
+</body>
 </html>
