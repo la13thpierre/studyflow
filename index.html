@@ -10,6 +10,19 @@
 
 <body>
 
+    <nav class="navbar">
+    <div class="nav-container">
+        <span class="nav-logo">⚡ StudyFlow</span>
+        <div class="nav-links">
+            <button class="nav-btn active" id="nav-summary">Summariser</button>
+            <button class="nav-btn" id="nav-flashcards">Flashcards</button>
+            <button class="nav-btn" id="nav-quizzes">Quizzes</button>
+        </div>
+    </div>
+</nav>
+
+<div id="view-summary" class="app-view">
+
     <div class="container">
 
     <div class="logo">📚</div>
@@ -38,6 +51,7 @@
         <ul id="summary-points">
         </ul>
     </div>
+</div>
 
     <div class="features">
 
@@ -67,3 +81,13 @@
 <script src="script.js"></script>
 </body>
 </html>
+
+<div id="view-flashcards" class="app-view" style="display: none;">
+    <h2>🎴 Flashcard Studio</h2>
+    <p class="description">Your automated study decks will appear here shortly.</p>
+</div>
+
+<div id="view-quizzes" class="app-view" style="display: none;">
+    <h2>📝 Quiz Zone</h2>
+    <p class="description">Your customized AI mock assessments are loading soon.</p>
+</div>
