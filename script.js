@@ -3,8 +3,9 @@ const fileName = document.getElementById("fileName");
 
 fileInput.addEventListener("change", function () {
 
-    if (this.files.length > 0) {
-        fileName.textContent = "📄 " + this.files[0].name;
+    if (fileInput.files.length > 0) {
+        fileName.textContent = "📄 " + fileInput.files[0].name;
     }
 
 });
+
