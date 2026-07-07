@@ -105,7 +105,7 @@ button:hover {
 
 
 .upload-btn {
-    background-color: #3b82f6; 
+    background-color: #1a56db;
     color: white;
     padding: 12px 24px;
     border-radius: 8px;
@@ -114,17 +114,61 @@ button:hover {
     cursor: pointer;
     display: inline-block;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(26, 86, 219, 0.2);
 }
 
 .upload-btn:hover {
-    background-color: #2563eb;
+    background-color: #1e40af;
     transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(26, 86, 219, 0.3);
 }
+
 
 .file-status-text {
     color: #94A3B8;
     font-size: 16px;
     margin: 15px 0;
     font-weight: 500;
+}
+.action-btn {
+    background-color: #10B981;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.action-btn:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+}
+
+.summary-box {
+    background-color: #161e2d;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 600px;
+    margin: 40px auto 0;
+    text-align: left;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.summary-box h3 {
+    margin-top: 0;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.summary-box ul {
+    color: #CBD5E1;
+    line-height: 1.8;
+    padding-left: 20px;
 }
