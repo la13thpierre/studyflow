@@ -1,6 +1,8 @@
 const fileInput = document.getElementById('file-upload');
 const fileNameDisplay = document.getElementById('file-name');
 const generateBtn = document.getElementById('generate-btn');
+const aiOutput = document.getElementById('ai-output');
+const summaryPoints = document.getElementById('summary-points');
 
 fileInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
@@ -8,7 +10,37 @@ fileInput.addEventListener('change', function(event) {
     if (file) {
         fileNameDisplay.innerHTML = "📄 " + file.name;
         generateBtn.style.display = 'inline-block';
+        generateBtn.innerHTML = 'Generate Summary';
+        generateBtn.disabled = false;
+        aiOutput.style.display = 'none';
     }
 });
+
+generateBtn.addEventListener('click', function() {
+    generateBtn.innerHTML = '⏳ Summarising...';
+    generateBtn.disabled = true; 
+    
+    setTimeout(function() {
+        summaryPoints.innerHTML = '';
+        
+        const fakePoints = [
+            "Core Concept: Main definitions and foundational formulas identified from your notes.",
+            "Key Metric: Identified high-priority terminology likely to appear on exam specifications.",
+            "Action Item: Review matching summary flashcards to solidify retention before tomorrow."
+        ];
+        
+        fakePoints.forEach(function(point) {
+            const li = document.createElement('li');
+            li.textContent = point;
+            summaryPoints.appendChild(li);
+        });
+        
+        generateBtn.innerHTML = 'Summary Complete! ✓';
+        generateBtn.disabled = false;
+        aiOutput.style.display = 'block';
+        
+    }, 2000);
+});
+
 
 
