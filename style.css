@@ -103,12 +103,7 @@ button:hover {
 }
 
 
-#fileName {
-    margin-top: 20px;
-    color: #38BDF8;
-    font-size: 18px;
-    font-weight: bold;
-}
+
 .upload-btn {
     background-color: #3b82f6; 
     color: white;
