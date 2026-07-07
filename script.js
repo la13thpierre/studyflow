@@ -42,5 +42,34 @@ generateBtn.addEventListener('click', function() {
     }, 2000);
 });
 
+const navSummary = document.getElementById('nav-summary');
+const navFlashcards = document.getElementById('nav-flashcards');
+const navQuizzes = document.getElementById('nav-quizzes');
+
+const viewSummary = document.getElementById('view-summary');
+const viewFlashcards = document.getElementById('view-flashcards');
+const viewQuizzes = document.getElementById('view-quizzes');
+
+function switchView(activeButton, activeView) {
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.app-view').forEach(view => view.style.display = 'none');
+    
+    activeButton.classList.add('active');
+    activeView.style.display = 'block';
+}
+
+navSummary.addEventListener('click', function() {
+    switchView(navSummary, viewSummary);
+});
+
+navFlashcards.addEventListener('click', function() {
+    switchView(navFlashcards, viewFlashcards);
+});
+
+navQuizzes.addEventListener('click', function() {
+    switchView(navQuizzes, viewQuizzes);
+});
+
+
 
 
