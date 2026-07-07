@@ -24,13 +24,21 @@
     Turn your class notes into AI-powered summaries and flashcards in seconds.
 </p>
 
-    <input type="file" id="fileInput" hidden>
+        <div class="upload-section">
+        <label for="file-upload" class="upload-btn">📄 Upload Notes</label>
+        <input type="file" id="file-upload" style="display: none;" />
+        
+        <p id="file-name" class="file-status-text"></p>
+        
+        <button id="generate-btn" class="action-btn" style="display: none;">Generate Summary</button>
+    </div>
 
-<button onclick="document.getElementById('fileInput').click()">
-    Upload Notes
-</button>
+    <div id="ai-output" class="summary-box" style="display: none;">
+        <h3 id="summary-title">📝 AI Summary</h3>
+        <ul id="summary-points">
+        </ul>
+    </div>
 
-<p id="fileName"></p>
     <div class="features">
 
     <div class="card">

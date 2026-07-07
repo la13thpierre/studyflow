@@ -1,11 +1,14 @@
-const fileInput = document.getElementById("fileInput");
-const fileName = document.getElementById("fileName");
+const fileInput = document.getElementById('file-upload');
+const fileNameDisplay = document.getElementById('file-name');
+const generateBtn = document.getElementById('generate-btn');
 
-fileInput.addEventListener("change", function () {
-
-    if (fileInput.files.length > 0) {
-        fileName.textContent = "📄 " + fileInput.files[0].name;
+fileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    
+    if (file) {
+        fileNameDisplay.innerHTML = "📄 " + file.name;
+        generateBtn.style.display = 'inline-block';
     }
-
 });
+
 
