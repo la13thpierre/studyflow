@@ -109,3 +109,27 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
 }
+.upload-btn {
+    background-color: #3b82f6; 
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.upload-btn:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+.file-status-text {
+    color: #94A3B8;
+    font-size: 16px;
+    margin: 15px 0;
+    font-weight: 500;
+}
