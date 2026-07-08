@@ -77,7 +77,3 @@ navQuizzes.addEventListener('click', function() {
     viewQuizzes.style.display = 'block';
 });
 
-
-if (navSummary) navSummary.addEventListener('click', function() { handleTabClick(navSummary, viewSummary); });
-if (navFlashcards) navFlashcards.addEventListener('click', function() { handleTabClick(navFlashcards, viewFlashcards); });
-if (navQuizzes) navQuizzes.addEventListener('click', function() { handleTabClick(navQuizzes, viewQuizzes); });
