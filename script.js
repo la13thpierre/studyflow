@@ -15,7 +15,8 @@ const viewQuizzes = document.getElementById('view-quizzes');
 if (fileInput) {
     fileInput.addEventListener('change', function(e) {
         if (e.target.files && e.target.files[0]) {
-            fileNameDisplay.innerHTML = "📄 " + e.target.files[0].name;
+            fileNameDisplay.innerHTML = "📄 " + file[0].name;
+
             generateBtn.style.display = 'inline-block';
             generateBtn.innerHTML = 'Generate Summary';
             generateBtn.disabled = false;
