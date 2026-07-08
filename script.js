@@ -50,15 +50,33 @@ if (generateBtn) {
     });
 }
 
-function handleTabClick(btn, view) {
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    viewSummary.style.display = 'none';
+navSummary.addEventListener('click', function() {
+    navSummary.classList.add('active');
+    navFlashcards.classList.remove('active');
+    navQuizzes.classList.remove('active');
+    viewSummary.style.display = 'block';
     viewFlashcards.style.display = 'none';
     viewQuizzes.style.display = 'none';
-    
-    btn.classList.add('active');
-    view.style.display = 'block';
-}
+});
+
+navFlashcards.addEventListener('click', function() {
+    navSummary.classList.remove('active');
+    navFlashcards.classList.add('active');
+    navQuizzes.classList.remove('active');
+    viewSummary.style.display = 'none';
+    viewFlashcards.style.display = 'block';
+    viewQuizzes.style.display = 'none';
+});
+
+navQuizzes.addEventListener('click', function() {
+    navSummary.classList.remove('active');
+    navFlashcards.classList.remove('active');
+    navQuizzes.classList.add('active');
+    viewSummary.style.display = 'none';
+    viewFlashcards.style.display = 'none';
+    viewQuizzes.style.display = 'block';
+});
+
 
 if (navSummary) navSummary.addEventListener('click', function() { handleTabClick(navSummary, viewSummary); });
 if (navFlashcards) navFlashcards.addEventListener('click', function() { handleTabClick(navFlashcards, viewFlashcards); });
