@@ -24,6 +24,7 @@ fileInput.addEventListener('change', function(event) {
     }
 });
 
+
 generateBtn.addEventListener('click', function() {
     generateBtn.innerHTML = '⏳ Summarising...';
     generateBtn.disabled = true; 
