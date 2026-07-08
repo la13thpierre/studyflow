@@ -4,6 +4,44 @@ const generateBtn = document.getElementById('generate-btn');
 const aiOutput = document.getElementById('ai-output');
 const summaryPoints = document.getElementById('summary-points');
 
+fileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    
+    if (file) {
+        fileNameDisplay.innerHTML = "📄 " + file.name;
+        generateBtn.style.display = 'inline-block';
+        generateBtn.innerHTML = 'Generate Summary';
+        generateBtn.disabled = false;
+        aiOutput.style.display = 'none';
+    }
+});
+
+generateBtn.addEventListener('click', function() {
+    generateBtn.innerHTML = '⏳ Summarising...';
+    generateBtn.disabled = true; 
+    
+    setTimeout(function() {
+        summaryPoints.innerHTML = '';
+        
+        const fakePoints = [
+            "Core Concept: Main definitions and foundational formulas identified from your notes.",
+            "Key Metric: Identified high-priority terminology likely to appear on exam specifications.",
+            "Action Item: Review matching summary flashcards to solidify retention before tomorrow."
+        ];
+        
+        fakePoints.forEach(function(point) {
+            const li = document.createElement('li');
+            li.textContent = point;
+            summaryPoints.appendChild(li);
+        });
+        
+        generateBtn.innerHTML = 'Summary Complete! ✓';
+        generateBtn.disabled = false;
+        aiOutput.style.display = 'block';
+        
+    }, 2000);
+});
+
 const navSummary = document.getElementById('nav-summary');
 const navFlashcards = document.getElementById('nav-flashcards');
 const navQuizzes = document.getElementById('nav-quizzes');
@@ -12,69 +50,26 @@ const viewSummary = document.getElementById('view-summary');
 const viewFlashcards = document.getElementById('view-flashcards');
 const viewQuizzes = document.getElementById('view-quizzes');
 
-if (fileInput) {
-    fileInput.addEventListener('change', function(e) {
-        if (e.target.files && e.target.files[0]) {
-            fileNameDisplay.innerHTML = "📄 " + file[0].name;
-
-            generateBtn.style.display = 'inline-block';
-            generateBtn.innerHTML = 'Generate Summary';
-            generateBtn.disabled = false;
-            aiOutput.style.display = 'none';
-        }
-    });
-}
-
-if (generateBtn) {
-    generateBtn.addEventListener('click', function() {
-        generateBtn.innerHTML = '⏳ Summarising...';
-        generateBtn.disabled = true; 
-        
-        setTimeout(function() {
-            summaryPoints.innerHTML = '';
-            const fakePoints = [
-                "Core Concept: Main definitions and foundational formulas identified from your notes.",
-                "Key Metric: Identified high-priority terminology likely to appear on exam specifications.",
-                "Action Item: Review matching summary flashcards to solidify retention before tomorrow."
-            ];
-            
-            fakePoints.forEach(function(point) {
-                const li = document.createElement('li');
-                li.textContent = point;
-                summaryPoints.appendChild(li);
-            });
-            
-            generateBtn.innerHTML = 'Summary Complete! ✓';
-            generateBtn.disabled = false;
-            aiOutput.style.display = 'block';
-        }, 2000);
-    });
+function switchView(activeButton, activeView) {
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.app-view').forEach(view => view.style.display = 'none');
+    
+    activeButton.classList.add('active');
+    activeView.style.display = 'block';
 }
 
 navSummary.addEventListener('click', function() {
-    navSummary.classList.add('active');
-    navFlashcards.classList.remove('active');
-    navQuizzes.classList.remove('active');
-    viewSummary.style.display = 'block';
-    viewFlashcards.style.display = 'none';
-    viewQuizzes.style.display = 'none';
+    switchView(navSummary, viewSummary);
 });
 
 navFlashcards.addEventListener('click', function() {
-    navSummary.classList.remove('active');
-    navFlashcards.classList.add('active');
-    navQuizzes.classList.remove('active');
-    viewSummary.style.display = 'none';
-    viewFlashcards.style.display = 'block';
-    viewQuizzes.style.display = 'none';
+    switchView(navFlashcards, viewFlashcards);
 });
 
 navQuizzes.addEventListener('click', function() {
-    navSummary.classList.remove('active');
-    navFlashcards.classList.remove('active');
-    navQuizzes.classList.add('active');
-    viewSummary.style.display = 'none';
-    viewFlashcards.style.display = 'none';
-    viewQuizzes.style.display = 'block';
+    switchView(navQuizzes, viewQuizzes);
 });
+
+
+
 

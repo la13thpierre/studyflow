@@ -37,15 +37,14 @@
     Turn your class notes into AI-powered summaries and flashcards in seconds.
 </p>
 
-                    <div class="upload-section">
-            <label for="file-upload" class="upload-btn">📄 Upload Notes</label>
-            <input type="file" id="file-upload" style="display: none;" />
-            
-            <p id="fileName" class="file-status-text"></p>
-            
-            <button id="generateBtn" class="action-btn" style="display: none;">Generate Summary</button>
-        </div>
-
+        <div class="upload-section">
+        <label for="file-upload" class="upload-btn">📄 Upload Notes</label>
+        <input type="file" id="file-upload" style="display: none;" />
+        
+        <p id="file-name" class="file-status-text"></p>
+        
+        <button id="generate-btn" class="action-btn" style="display: none;">Generate Summary</button>
+    </div>
 
     <div id="ai-output" class="summary-box" style="display: none;">
         <h3 id="summary-title">📝 AI Summary</h3>
@@ -79,7 +78,9 @@
 
 </div>
 
-
+<script src="script.js"></script>
+</body>
+</html>
 
 <div id="view-flashcards" class="app-view" style="display: none;">
     <h2>🎴 Flashcard Studio</h2>
@@ -87,8 +88,7 @@
     
     <div class="flashcard-container">
         <!-- Card 1 -->
-    <div class="flashcard" onclick="this.classList.toggle('flipped')">
-
+    
             <div class="card-inner">
                 <div class="card-front">
                     <p class="card-label">Question</p>
@@ -120,22 +120,8 @@
 </div>
 
 
-
 <div id="view-quizzes" class="app-view" style="display: none;">
     <h2>📝 Quiz Zone</h2>
-    <p class="description">Test your knowledge with your custom AI generated mock questions.</p>
-    
-    <div class="quiz-container">
-        <div class="quiz-card">
-            <p class="quiz-progress">Question 1 of 1</p>
-            <h3 class="quiz-question">Which programming language adds interactivity to a web application?</h3>
-            
-            <div class="quiz-options">
-                <button class="option-btn" onclick="this.style.backgroundColor='#ef4444'">HTML</button>
-                <button class="option-btn" onclick="this.style.backgroundColor='#ef4444'">CSS</button>
-                <button class="option-btn" onclick="this.style.backgroundColor='#10b981'">JavaScript</button>
-                <button class="option-btn" onclick="this.style.backgroundColor='#ef4444'">Python</button>
-            </div>
-        </div>
-    </div>
+    <p class="description">Your customized AI mock assessments are loading soon.</p>
 </div>
+
