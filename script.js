@@ -4,6 +4,14 @@ const generateBtn = document.getElementById('generate-btn');
 const aiOutput = document.getElementById('ai-output');
 const summaryPoints = document.getElementById('summary-points');
 
+const navSummary = document.getElementById('nav-summary');
+const navFlashcards = document.getElementById('nav-flashcards');
+const navQuizzes = document.getElementById('nav-quizzes');
+
+const viewSummary = document.getElementById('view-summary');
+const viewFlashcards = document.getElementById('view-flashcards');
+const viewQuizzes = document.getElementById('view-quizzes');
+
 fileInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
     
@@ -42,17 +50,12 @@ generateBtn.addEventListener('click', function() {
     }, 2000);
 });
 
-const navSummary = document.getElementById('nav-summary');
-const navFlashcards = document.getElementById('nav-flashcards');
-const navQuizzes = document.getElementById('nav-quizzes');
-
-const viewSummary = document.getElementById('view-summary');
-const viewFlashcards = document.getElementById('view-flashcards');
-const viewQuizzes = document.getElementById('view-quizzes');
-
 function switchView(activeButton, activeView) {
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.app-view').forEach(view => view.style.display = 'none');
+    
+    viewSummary.style.display = 'none';
+    viewFlashcards.style.display = 'none';
+    viewQuizzes.style.display = 'none';
     
     activeButton.classList.add('active');
     activeView.style.display = 'block';
