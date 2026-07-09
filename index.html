@@ -77,6 +77,52 @@
     </div>
 
 </div>
+<div id="view-flashcards" class="app-view" style="display:none;">
+
+    <div class="container">
+
+        <h1>Flashcards</h1>
+
+        <p class="description">
+            Click the card to reveal the answer.
+        </p>
+
+        <div class="flashcard" onclick="this.classList.toggle('flip')">
+
+            <div class="flashcard-inner">
+
+                <div class="flashcard-front">
+                    <h2>Question</h2>
+                    <p>What does HTML stand for?</p>
+                </div>
+
+                <div class="flashcard-back">
+                    <h2>Answer</h2>
+                    <p>HyperText Markup Language</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div id="view-quizzes" class="app-view" style="display:none;">
+
+    <div class="container">
+
+        <h1>Quizzes</h1>
+
+        <p class="description">
+            AI-generated quizzes will appear here.
+        </p>
+
+        <button>Start Quiz</button>
+
+    </div>
+
+</div>
 
 <script src="script.js"></script>
 </body>
