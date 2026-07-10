@@ -381,3 +381,11 @@ body {
     color:white;
     font-weight:bold;
 }
+
+.flashcard{
+    display:none;
+}
+
+.active-card{
+    display:block;
+}
