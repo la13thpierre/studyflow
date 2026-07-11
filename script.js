@@ -115,3 +115,30 @@ prevBtn.addEventListener("click",function(){
 
 showCard(0);
 
+const quizButtons = document.querySelectorAll(".quiz-btn");
+
+quizButtons.forEach(button => {
+
+    button.addEventListener("click", function(){
+
+        quizButtons.forEach(btn => {
+
+            btn.disabled = true;
+
+        });
+
+        if(button.classList.contains("correct")){
+
+            button.style.backgroundColor = "#10B981";
+
+        }else{
+
+            button.style.backgroundColor = "#EF4444";
+
+            document.querySelector(".correct").style.backgroundColor = "#10B981";
+
+        }
+
+    });
+
+});
