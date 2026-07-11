@@ -71,5 +71,47 @@ navQuizzes.addEventListener('click', function() {
 });
 
 
+const flashcards = document.querySelectorAll(".flashcard");
+const nextBtn = document.getElementById("next-card");
+const prevBtn = document.getElementById("prev-card");
+const counter = document.getElementById("card-counter");
 
+let currentCard = 0;
+
+function showCard(index){
+
+    flashcards.forEach(card=>{
+        card.classList.remove("active-card");
+    });
+
+    flashcards[index].classList.add("active-card");
+
+    counter.textContent = `${index + 1} / ${flashcards.length}`;
+}
+
+nextBtn.addEventListener("click",function(){
+
+    currentCard++;
+
+    if(currentCard >= flashcards.length){
+        currentCard = 0;
+    }
+
+    showCard(currentCard);
+
+});
+
+prevBtn.addEventListener("click",function(){
+
+    currentCard--;
+
+    if(currentCard < 0){
+        currentCard = flashcards.length - 1;
+    }
+
+    showCard(currentCard);
+
+});
+
+showCard(0);
 
