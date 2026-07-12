@@ -165,3 +165,25 @@ const quizData = [
     answer: 2
   }
 ];
+
+const quizQuestion = document.getElementById("quiz-question");
+
+const option0 = document.getElementById("option0");
+const option1 = document.getElementById("option1");
+const option2 = document.getElementById("option2");
+const option3 = document.getElementById("option3");
+
+let currentQuestion = 0;
+
+function loadQuestion() {
+
+    quizQuestion.textContent = quizData[currentQuestion].question;
+
+    option0.textContent = quizData[currentQuestion].options[0];
+    option1.textContent = quizData[currentQuestion].options[1];
+    option2.textContent = quizData[currentQuestion].options[2];
+    option3.textContent = quizData[currentQuestion].options[3];
+
+}
+
+loadQuestion();
