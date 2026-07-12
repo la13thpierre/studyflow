@@ -142,3 +142,26 @@ quizButtons.forEach(button => {
     });
 
 });
+
+const quizData = [
+  {
+    question: "What does HTML stand for?",
+    options: [
+      "HyperText Markup Language",
+      "HighText Machine Language",
+      "Home Tool Markup Language",
+      "Hyper Transfer Markup"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which language makes websites interactive?",
+    options: [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Python"
+    ],
+    answer: 2
+  }
+];
