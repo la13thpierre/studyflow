@@ -187,3 +187,17 @@ function loadQuestion() {
 }
 
 loadQuestion();
+
+const nextQuestionBtn = document.getElementById("next-question");
+
+nextQuestionBtn.addEventListener("click", function () {
+
+    currentQuestion++;
+
+    if (currentQuestion >= quizData.length) {
+        currentQuestion = 0;
+    }
+
+    loadQuestion();
+
+});
