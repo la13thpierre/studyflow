@@ -132,7 +132,7 @@ quizButtons.forEach(button => {
     button.style.backgroundColor = "#10B981";
     score++;
 
-    }else{
+}else{
 
     button.style.backgroundColor = "#EF4444";
 
@@ -140,11 +140,7 @@ quizButtons.forEach(button => {
 
 }
 
-            document.querySelector(".correct").style.backgroundColor = "#10B981";
-
-        }
-
-    });
+});
 
 });
 
