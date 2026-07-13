@@ -129,11 +129,16 @@ quizButtons.forEach(button => {
 
         if(button.classList.contains("correct")){
 
-            button.style.backgroundColor = "#10B981";
+    button.style.backgroundColor = "#10B981";
+    score++;
 
-        }else{
+    }else{
 
-            button.style.backgroundColor = "#EF4444";
+    button.style.backgroundColor = "#EF4444";
+
+    quizButtons[quizData[currentQuestion].answer].style.backgroundColor = "#10B981";
+
+}
 
             document.querySelector(".correct").style.backgroundColor = "#10B981";
 
@@ -174,6 +179,7 @@ const option2 = document.getElementById("option2");
 const option3 = document.getElementById("option3");
 
 let currentQuestion = 0;
+let score = 0;
 
 function loadQuestion() {
 
@@ -190,13 +196,30 @@ loadQuestion();
 
 const nextQuestionBtn = document.getElementById("next-question");
 
+
 nextQuestionBtn.addEventListener("click", function () {
 
     currentQuestion++;
 
     if (currentQuestion >= quizData.length) {
-        currentQuestion = 0;
+
+        quizQuestion.innerHTML = "🎉 Quiz Complete!";
+
+        option0.style.display = "none";
+        option1.style.display = "none";
+        option2.style.display = "none";
+        option3.style.display = "none";
+
+        nextQuestionBtn.innerHTML =
+            "Score: " + score + " / " + quizData.length;
+
+        return;
     }
+
+    quizButtons.forEach(btn => {
+        btn.disabled = false;
+        btn.style.backgroundColor = "";
+    });
 
     loadQuestion();
 
