@@ -130,7 +130,10 @@ quizButtons.forEach(button => {
         if(button.classList.contains("correct")){
 
     button.style.backgroundColor = "#10B981";
-    score++;
+  score++;
+
+document.getElementById("score-counter").textContent =
+    "Score: " + score;
 
 }else{
 
@@ -185,6 +188,12 @@ function loadQuestion() {
     option1.textContent = quizData[currentQuestion].options[1];
     option2.textContent = quizData[currentQuestion].options[2];
     option3.textContent = quizData[currentQuestion].options[3];
+
+    document.getElementById("question-counter").textContent =
+    "Question " + (currentQuestion + 1) + " / " + quizData.length;
+   
+    document.getElementById("score-counter").textContent =
+    "Score: " + score;
 
 }
 
