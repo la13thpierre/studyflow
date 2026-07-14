@@ -127,7 +127,7 @@ quizButtons.forEach(button => {
 
         });
 
-        if(button.classList.contains("correct")){
+        if(button.id === "option" + quizData[currentQuestion].answer){
 
     button.style.backgroundColor = "#10B981";
   score++;
