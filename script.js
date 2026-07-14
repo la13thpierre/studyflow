@@ -8,11 +8,25 @@ fileInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
     
     if (file) {
+
+
         fileNameDisplay.innerHTML = "📄 " + file.name;
         generateBtn.style.display = 'inline-block';
         generateBtn.innerHTML = 'Generate Summary';
         generateBtn.disabled = false;
         aiOutput.style.display = 'none';
+
+        const reader = new FileReader();
+
+reader.onload = function(e) {
+
+    const uploadedText = e.target.result;
+
+    console.log(uploadedText);
+
+};
+
+reader.readAsText(file);
     }
 });
 
