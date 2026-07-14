@@ -20,7 +20,11 @@ fileInput.addEventListener('change', function(event) {
 
 reader.onload = function(e) {
 
-    const uploadedText = e.target.result;
+   const uploadedText = e.target.result;
+
+uploadedNotes = uploadedText;
+
+console.log(uploadedText);
 
     console.log(uploadedText);
 
