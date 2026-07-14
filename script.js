@@ -41,6 +41,7 @@ generateBtn.addEventListener('click', function() {
     setTimeout(function() {
         summaryPoints.innerHTML = '';
         
+        console.log(uploadedNotes);
         const fakePoints = [
             "Core Concept: Main definitions and foundational formulas identified from your notes.",
             "Key Metric: Identified high-priority terminology likely to appear on exam specifications.",
