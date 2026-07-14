@@ -42,17 +42,11 @@ generateBtn.addEventListener('click', function() {
         summaryPoints.innerHTML = '';
         
         console.log(uploadedNotes);
-        const fakePoints = [
-            "Core Concept: Main definitions and foundational formulas identified from your notes.",
-            "Key Metric: Identified high-priority terminology likely to appear on exam specifications.",
-            "Action Item: Review matching summary flashcards to solidify retention before tomorrow."
-        ];
-        
-        fakePoints.forEach(function(point) {
-            const li = document.createElement('li');
-            li.textContent = point;
-            summaryPoints.appendChild(li);
-        });
+        summaryPoints.innerHTML = "";
+
+        const li = document.createElement("li");
+        li.textContent = uploadedNotes;
+       summaryPoints.appendChild(li);
         
         generateBtn.innerHTML = 'Summary Complete! ✓';
         generateBtn.disabled = false;
