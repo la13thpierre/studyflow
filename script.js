@@ -1,3 +1,8 @@
+let uploadedNotes = "";
+let flashcards = [];
+
+const API_KEY = "";
+
 const fileInput = document.getElementById('file-upload');
 const fileNameDisplay = document.getElementById('file-name');
 const generateBtn = document.getElementById('generate-btn');
@@ -6,9 +11,11 @@ const summaryPoints = document.getElementById('summary-points');
 
 fileInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
-    
-    if (file) {
 
+
+    
+    
+  if (file) {
 
         fileNameDisplay.innerHTML = "📄 " + file.name;
         generateBtn.style.display = 'inline-block';
@@ -34,25 +41,130 @@ reader.readAsText(file);
     }
 });
 
-generateBtn.addEventListener('click', function() {
-    generateBtn.innerHTML = '⏳ Summarising...';
-    generateBtn.disabled = true; 
-    
-    setTimeout(function() {
-        summaryPoints.innerHTML = '';
-        
-        console.log(uploadedNotes);
-        summaryPoints.innerHTML = "";
+async function generateAISummary(notes) {
 
-        const li = document.createElement("li");
-        li.textContent = uploadedNotes;
+async function generateAIFlashcards(notes) {
+
+    const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text:
+`Turn these revision notes into 5 flashcards.
+
+Format exactly like this:
+
+Question: ...
+Answer: ...
+
+Question: ...
+Answer: ...
+
+Notes:
+${notes}`
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    return data.candidates[0].content.parts[0].text;
+
+}
+    const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: `Summarise these revision notes into short bullet points:
+
+${notes}`
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    return data.candidates[0].content.parts[0].text;
+}
+
+function parseFlashcards(text) {
+
+    const cards = [];
+
+    const sections = text.split("Question:");
+
+    sections.forEach(section => {
+
+        if(section.trim() === "") return;
+
+        const parts = section.split("Answer:");
+
+        if(parts.length === 2){
+
+            cards.push({
+
+                question: parts[0].trim(),
+
+                answer: parts[1].trim()
+
+            });
+
+        }
+
+    });
+
+    return cards;
+
+}
+
+generateBtn.addEventListener("click", async function () {
+
+    generateBtn.innerHTML = "⏳ Summarising...";
+    generateBtn.disabled = true;
+
+    summaryPoints.innerHTML = "";
+
+
+       const summary = await generateAISummary(uploadedNotes);
+
+   const flashcardText = await generateAIFlashcards(uploadedNotes);
+
+const aiFlashcards = parseFlashcards(flashcardText);
+
+console.log(aiFlashcards);
+
+       const li = document.createElement("li");
+       li.textContent = summary;
        summaryPoints.appendChild(li);
         
         generateBtn.innerHTML = 'Summary Complete! ✓';
         generateBtn.disabled = false;
         aiOutput.style.display = 'block';
         
-    }, 2000);
 });
 
 const navSummary = document.getElementById('nav-summary');
@@ -84,29 +196,29 @@ navQuizzes.addEventListener('click', function() {
 });
 
 
-const flashcards = document.querySelectorAll(".flashcard");
+const flashcardElements = document.querySelectorAll(".flashcard");
 const nextBtn = document.getElementById("next-card");
 const prevBtn = document.getElementById("prev-card");
 const counter = document.getElementById("card-counter");
 
 let currentCard = 0;
 
-function showCard(index){
+function showCard(index) {
 
-    flashcards.forEach(card=>{
+    flashcardElements.forEach(card => {
         card.classList.remove("active-card");
     });
 
-    flashcards[index].classList.add("active-card");
+    flashcardElements[index].classList.add("active-card");
 
-    counter.textContent = `${index + 1} / ${flashcards.length}`;
+    counter.textContent = `${index + 1} / ${flashcardElements.length}`;
 }
 
 nextBtn.addEventListener("click",function(){
 
     currentCard++;
 
-    if(currentCard >= flashcards.length){
+    if(currentCard >= flashcardElements.length){
         currentCard = 0;
     }
 
@@ -119,7 +231,7 @@ prevBtn.addEventListener("click",function(){
     currentCard--;
 
     if(currentCard < 0){
-        currentCard = flashcards.length - 1;
+       currentCard = flashcardElements.length - 1;
     }
 
     showCard(currentCard);
