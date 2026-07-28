@@ -43,46 +43,6 @@ reader.readAsText(file);
 
 async function generateAISummary(notes) {
 
-async function generateAIFlashcards(notes) {
-
-    const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                contents: [
-                    {
-                        parts: [
-                            {
-                                text:
-`Turn these revision notes into 5 flashcards.
-
-Format exactly like this:
-
-Question: ...
-Answer: ...
-
-Question: ...
-Answer: ...
-
-Notes:
-${notes}`
-                            }
-                        ]
-                    }
-                ]
-            })
-        }
-    );
-
-    const data = await response.json();
-
-    return data.candidates[0].content.parts[0].text;
-
-}
     const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
         {
@@ -97,6 +57,81 @@ ${notes}`
                             {
                                 text: `Summarise these revision notes into short bullet points:
 
+${notes}`
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    return data.candidates[0].content.parts[0].text;
+}
+    
+const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: `Summarise these revision notes into short bullet points:
+
+${notes}`
+                            }
+                        ]
+                    }
+                ]
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    return data.candidates[0].content.parts[0].text;
+
+    async function generateAIFlashcards(notes) {
+
+    const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: `Turn these revision notes into 5 flashcards.
+
+Format exactly like this:
+
+Question: ...
+Answer: ...
+
+Question: ...
+Answer: ...
+
+Question: ...
+Answer: ...
+
+Question: ...
+Answer: ...
+
+Question: ...
+Answer: ...
+
+Notes:
 ${notes}`
                             }
                         ]
