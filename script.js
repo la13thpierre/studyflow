@@ -1,7 +1,6 @@
 let uploadedNotes = "";
 let flashcards = [];
 
-const API_KEY = "";
 
 const fileInput = document.getElementById('file-upload');
 const fileNameDisplay = document.getElementById('file-name');
