@@ -42,32 +42,23 @@ reader.readAsText(file);
 
 async function generateAISummary(notes) {
 
-    const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                contents: [
-                    {
-                        parts: [
-                            {
-                                text: `Summarise these revision notes into short bullet points:
-
-${notes}`
-                            }
-                        ]
-                    }
-                ]
-            })
-        }
-    );
+    const response = await fetch("/api/summarise", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            notes: notes
+        })
+    });
 
     const data = await response.json();
 
-    return data.candidates[0].content.parts[0].text;
+    if (!response.ok) {
+        throw new Error(data.error || "Failed to generate summary");
+    }
+
+    return data.summary;
 }
     
 const response = await fetch(
@@ -97,52 +88,25 @@ ${notes}`
 
     return data.candidates[0].content.parts[0].text;
 
-    async function generateAIFlashcards(notes) {
+    async function generateAISummary(notes) {
 
-    const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                contents: [
-                    {
-                        parts: [
-                            {
-                                text: `Turn these revision notes into 5 flashcards.
-
-Format exactly like this:
-
-Question: ...
-Answer: ...
-
-Question: ...
-Answer: ...
-
-Question: ...
-Answer: ...
-
-Question: ...
-Answer: ...
-
-Question: ...
-Answer: ...
-
-Notes:
-${notes}`
-                            }
-                        ]
-                    }
-                ]
-            })
-        }
-    );
+    const response = await fetch("/api/summarise", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            notes: notes
+        })
+    });
 
     const data = await response.json();
 
-    return data.candidates[0].content.parts[0].text;
+    if (!response.ok) {
+        throw new Error(data.error || "Failed to generate summary");
+    }
+
+    return data.summary;
 }
 
 function parseFlashcards(text) {
