@@ -109,6 +109,27 @@ ${notes}`
     return data.summary;
 }
 
+async function generateAIFlashcards(notes) {
+
+    const response = await fetch("/api/flashcards", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            notes: notes
+        })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || "Failed to generate flashcards");
+    }
+
+    return data.flashcards;
+}
+
 function parseFlashcards(text) {
 
     const cards = [];
