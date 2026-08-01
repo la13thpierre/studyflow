@@ -61,9 +61,7 @@ async function generateAISummary(notes) {
     return data.summary;
 }
     
-
-
-    async function generateAISummary(notes) {
+  async function generateAISummary(notes) {
 
     const response = await fetch("/api/summarise", {
         method: "POST",
