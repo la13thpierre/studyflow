@@ -39,27 +39,6 @@ console.log(uploadedText);
 reader.readAsText(file);
     }
 });
-
-async function generateAISummary(notes) {
-
-    const response = await fetch("/api/summarise", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            notes: notes
-        })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.error || "Failed to generate summary");
-    }
-
-    return data.summary;
-}
     
   async function generateAISummary(notes) {
 
