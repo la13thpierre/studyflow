@@ -128,6 +128,7 @@ const aiFlashcards = parseFlashcards(flashcardText);
 
 console.log(aiFlashcards);
 
+
        const li = document.createElement("li");
        li.textContent = summary;
        summaryPoints.appendChild(li);
@@ -167,14 +168,65 @@ navQuizzes.addEventListener('click', function() {
 });
 
 
-const flashcardElements = document.querySelectorAll(".flashcard");
+const flashcardContainer = document.getElementById("flashcard-container");
 const nextBtn = document.getElementById("next-card");
 const prevBtn = document.getElementById("prev-card");
 const counter = document.getElementById("card-counter");
 
 let currentCard = 0;
+let flashcardElements = [];
+
+function displayFlashcards(cards) {
+
+    flashcardContainer.innerHTML = "";
+
+    flashcardElements = [];
+
+    currentCard = 0;
+
+    cards.forEach((card, index) => {
+
+        const flashcard = document.createElement("div");
+
+        flashcard.className = "flashcard";
+
+        if (index === 0) {
+            flashcard.classList.add("active-card");
+        }
+
+        flashcard.innerHTML = `
+            <div class="flashcard-inner">
+
+                <div class="flashcard-front">
+                    <h2>Question</h2>
+                    <p>${card.question}</p>
+                </div>
+
+                <div class="flashcard-back">
+                    <h2>Answer</h2>
+                    <p>${card.answer}</p>
+                </div>
+
+            </div>
+        `;
+
+        flashcard.addEventListener("click", function () {
+            flashcard.classList.toggle("flip");
+        });
+
+        flashcardContainer.appendChild(flashcard);
+
+        flashcardElements.push(flashcard);
+    });
+
+    counter.textContent = `1 / ${flashcardElements.length}`;
+}
 
 function showCard(index) {
+
+    if (flashcardElements.length === 0) {
+        return;
+    }
 
     flashcardElements.forEach(card => {
         card.classList.remove("active-card");
@@ -182,34 +234,39 @@ function showCard(index) {
 
     flashcardElements[index].classList.add("active-card");
 
-    counter.textContent = `${index + 1} / ${flashcardElements.length}`;
+    counter.textContent =
+        `${index + 1} / ${flashcardElements.length}`;
 }
 
-nextBtn.addEventListener("click",function(){
+nextBtn.addEventListener("click", function () {
+
+    if (flashcardElements.length === 0) {
+        return;
+    }
 
     currentCard++;
 
-    if(currentCard >= flashcardElements.length){
+    if (currentCard >= flashcardElements.length) {
         currentCard = 0;
     }
 
     showCard(currentCard);
-
 });
 
-prevBtn.addEventListener("click",function(){
+prevBtn.addEventListener("click", function () {
+
+    if (flashcardElements.length === 0) {
+        return;
+    }
 
     currentCard--;
 
-    if(currentCard < 0){
-       currentCard = flashcardElements.length - 1;
+    if (currentCard < 0) {
+        currentCard = flashcardElements.length - 1;
     }
 
     showCard(currentCard);
-
 });
-
-showCard(0);
 
 const quizButtons = document.querySelectorAll(".quiz-btn");
 
