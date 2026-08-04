@@ -127,7 +127,9 @@ generateBtn.addEventListener("click", async function () {
 const aiFlashcards = parseFlashcards(flashcardText);
 
 console.log(aiFlashcards);
+const aiQuiz = await generateAIQuiz(uploadedNotes);
 
+console.log("AI QUIZ:", aiQuiz);
 
        const li = document.createElement("li");
        li.textContent = summary;
@@ -299,6 +301,27 @@ document.getElementById("score-counter").textContent =
 });
 
 });
+
+async function generateAIQuiz(notes) {
+
+    const response = await fetch("/api/quiz", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            notes: notes
+        })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || "Failed to generate quiz");
+    }
+
+    return data.quiz;
+}
 
 const quizData = [
   {
