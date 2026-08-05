@@ -127,9 +127,8 @@ generateBtn.addEventListener("click", async function () {
 const aiFlashcards = parseFlashcards(flashcardText);
 
 console.log(aiFlashcards);
-const aiQuiz = await generateAIQuiz(uploadedNotes);
 
-console.log("AI QUIZ:", aiQuiz);
+displayFlashcards(aiFlashcards);
 
        const li = document.createElement("li");
        li.textContent = summary;
