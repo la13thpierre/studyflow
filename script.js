@@ -61,7 +61,10 @@ reader.readAsText(file);
     return data.summary;
 }
 
+
+
 async function generateAIFlashcards(notes) {
+    console.log("Calling /api/flashcards...");
 
     const response = await fetch("/api/flashcards", {
         method: "POST",
