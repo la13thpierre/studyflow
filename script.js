@@ -357,26 +357,6 @@ async function generateAIQuiz(notes) {
 }
 
 let quizData = []; // starts empty, gets filled after generation
-  {
-    question: "What does HTML stand for?",
-    options: [
-      "HyperText Markup Language",
-      "HighText Machine Language",
-      "Home Tool Markup Language",
-      "Hyper Transfer Markup"
-    ],
-    answer: 0
-  },
-  {
-    question: "Which language makes websites interactive?",
-    options: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-      "Python"
-    ],
-    answer: 2
-  }
 
 
 const quizQuestion = document.getElementById("quiz-question");
