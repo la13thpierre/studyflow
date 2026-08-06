@@ -132,6 +132,7 @@ const aiFlashcards = parseFlashcards(flashcardText);
 console.log(aiFlashcards);
 
 displayFlashcards(aiFlashcards);
+switchView(navFlashcards, viewFlashcards);
 
        const li = document.createElement("li");
        li.textContent = summary;
