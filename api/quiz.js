@@ -1,57 +1,42 @@
 export default async function handler(req, res) {
-
     if (req.method !== "POST") {
-        return res.status(405).json({
-            error: "Method not allowed"
-        });
+        return res.status(405).json({ error: "Method not allowed" });
     }
 
     try {
-
         const { notes } = req.body;
 
         if (!notes) {
-            return res.status(400).json({
-                error: "No notes provided"
-            });
+            return res.status(400).json({ error: "No notes provided" });
         }
 
-        const response = await fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/YOUR_WORKING_MODEL:generateContent",
+        const response = await callGeminiWithRetry(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
             {
                 method: "POST",
-
                 headers: {
                     "Content-Type": "application/json",
                     "x-goog-api-key": process.env.GEMINI_API_KEY
                 },
-
                 body: JSON.stringify({
                     contents: [
                         {
                             parts: [
                                 {
-                                    text: `Create 5 multiple-choice quiz questions from these revision notes.
+                                    text: `Turn these revision notes into 5 multiple choice quiz questions.
 
-Return ONLY valid JSON in this exact format:
+Do NOT use markdown, asterisks, or bold formatting. Plain text only.
 
-[
-  {
-    "question": "Question here",
-    "options": [
-      "Option 1",
-      "Option 2",
-      "Option 3",
-      "Option 4"
-    ],
-    "answer": 0
-  }
-]
+Format exactly like this for each question:
 
-The answer number must be 0, 1, 2, or 3 depending on which option is correct.
+Question: ...
+A) ...
+B) ...
+C) ...
+D) ...
+Correct: A
 
-Revision notes:
-
+Notes:
 ${notes}`
                                 }
                             ]
@@ -69,31 +54,28 @@ ${notes}`
             });
         }
 
-        let quizText =
-            data.candidates?.[0]?.content?.parts?.[0]?.text;
+        const quiz = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-        if (!quizText) {
-            return res.status(500).json({
-                error: "No quiz was returned"
-            });
+        if (!quiz) {
+            return res.status(500).json({ error: "No quiz was returned" });
         }
 
-        quizText = quizText
-            .replace(/```json/g, "")
-            .replace(/```/g, "")
-            .trim();
-
-        const quiz = JSON.parse(quizText);
-
-        return res.status(200).json({
-            quiz: quiz
-        });
+        return res.status(200).json({ quiz: quiz });
 
     } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
 
-        return res.status(500).json({
-            error: error.message
-        });
-
+// same retry helper you already added to the other two files
+async function callGeminiWithRetry(url, options, maxRetries = 3) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        const response = await fetch(url, options);
+        if (response.status !== 503) return response;
+        if (attempt < maxRetries) {
+            await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+        } else {
+            return response;
+        }
     }
 }

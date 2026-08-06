@@ -107,6 +107,38 @@ function parseFlashcards(text) {
     return cards;
 }
 
+function parseQuiz(text) {
+    const cleanText = text.replace(/\*\*/g, "");
+    const cards = [];
+
+    const sections = cleanText.split("Question:");
+
+    sections.forEach(section => {
+        if (section.trim() === "") return;
+
+        const correctMatch = section.match(/Correct:\s*([A-D])/i);
+        if (!correctMatch) return;
+
+        const questionText = section.split("A)")[0].trim();
+
+        const optionA = section.split("A)")[1]?.split("B)")[0]?.trim();
+        const optionB = section.split("B)")[1]?.split("C)")[0]?.trim();
+        const optionC = section.split("C)")[1]?.split("D)")[0]?.trim();
+        const optionD = section.split("D)")[1]?.split("Correct:")[0]?.trim();
+
+        const answerLetter = correctMatch[1].toUpperCase();
+        const answerIndex = { A: 0, B: 1, C: 2, D: 3 }[answerLetter];
+
+        cards.push({
+            question: questionText,
+            options: [optionA, optionB, optionC, optionD],
+            answer: answerIndex
+        });
+    });
+
+    return cards;
+}
+
 generateBtn.addEventListener("click", async function () {
 
     generateBtn.innerHTML = "⏳ Summarising...";
@@ -125,6 +157,12 @@ console.log(aiFlashcards);
 
 displayFlashcards(aiFlashcards);
 switchView(navFlashcards, viewFlashcards);
+
+const quizText = await generateAIQuiz(uploadedNotes);
+quizData = parseQuiz(quizText);
+currentQuestion = 0;
+score = 0;
+loadQuestion();
 
        const li = document.createElement("li");
        li.textContent = summary;
@@ -318,7 +356,7 @@ async function generateAIQuiz(notes) {
     return data.quiz;
 }
 
-const quizData = [
+let quizData = []; // starts empty, gets filled after generation
   {
     question: "What does HTML stand for?",
     options: [
@@ -339,7 +377,7 @@ const quizData = [
     ],
     answer: 2
   }
-];
+
 
 const quizQuestion = document.getElementById("quiz-question");
 
@@ -397,6 +435,6 @@ nextQuestionBtn.addEventListener("click", function () {
         btn.style.backgroundColor = "";
     });
 
-    loadQuestion();
+   
 
 });
