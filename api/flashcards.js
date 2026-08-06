@@ -29,6 +29,8 @@ export default async function handler(req, res) {
                                 {
                                     text: `Turn these revision notes into 5 flashcards.
 
+Do NOT use markdown, asterisks, or bold formatting. Plain text only.
+
 Format exactly like this:
 
 Question: ...

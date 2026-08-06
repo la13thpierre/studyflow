@@ -86,33 +86,25 @@ async function generateAIFlashcards(notes) {
 }
 
 function parseFlashcards(text) {
+    const cleanText = text.replace(/\*\*/g, ""); // strip markdown bold
 
     const cards = [];
-
-    const sections = text.split("Question:");
+    const sections = cleanText.split("Question:");
 
     sections.forEach(section => {
-
-        if(section.trim() === "") return;
+        if (section.trim() === "") return;
 
         const parts = section.split("Answer:");
 
-        if(parts.length === 2){
-
+        if (parts.length === 2) {
             cards.push({
-
                 question: parts[0].trim(),
-
                 answer: parts[1].trim()
-
             });
-
         }
-
     });
 
     return cards;
-
 }
 
 generateBtn.addEventListener("click", async function () {
