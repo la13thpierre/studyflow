@@ -4,12 +4,19 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { notes } = req.body;
+       const { notes, difficulty } = req.body;
 
         if (!notes) {
-            return res.status(400).json({ error: "No notes provided" });
-        }
+    return res.status(400).json({ error: "No notes provided" });
+}
 
+const level = difficulty || "Medium";
+
+const difficultyInstructions = {
+    Easy: "Make the questions simple, testing basic recall of facts.",
+    Medium: "Make the questions moderately challenging, testing understanding and application.",
+    Hard: "Make the questions difficult, testing deep understanding, edge cases, and critical thinking."
+};
         const response = await callGeminiWithRetry(
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
             {
@@ -25,8 +32,9 @@ export default async function handler(req, res) {
                                 {
                                     text: `Turn these revision notes into 5 multiple choice quiz questions.
 
-Do NOT use markdown, asterisks, or bold formatting. Plain text only.
+Difficulty: ${level}. ${difficultyInstructions[level]}
 
+Do NOT use markdown, asterisks, or bold formatting. Plain text only.
 Format exactly like this for each question:
 
 Question: ...

@@ -1,5 +1,15 @@
 let uploadedNotes = "";
 let flashcards = [];
+let selectedDifficulty = "Medium"; // default
+
+document.querySelectorAll(".difficulty-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+        selectedDifficulty = btn.dataset.level;
+
+        document.querySelectorAll(".difficulty-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+    });
+});
 
 
 const fileInput = document.getElementById('file-upload');
@@ -158,7 +168,7 @@ console.log(aiFlashcards);
 displayFlashcards(aiFlashcards);
 switchView(navFlashcards, viewFlashcards);
 
-const quizText = await generateAIQuiz(uploadedNotes);
+const quizText = await generateAIQuiz(uploadedNotes, selectedDifficulty);
 console.log("RAW QUIZ TEXT:", quizText);
 quizData = parseQuiz(quizText);
 console.log("PARSED QUIZ DATA:", quizData);
@@ -339,7 +349,7 @@ document.getElementById("score-counter").textContent =
 
 });
 
-async function generateAIQuiz(notes) {
+async function generateAIQuiz(notes, difficulty) {
 
     const response = await fetch("/api/quiz", {
         method: "POST",
@@ -347,7 +357,8 @@ async function generateAIQuiz(notes) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            notes: notes
+            notes: notes,
+            difficulty: difficulty
         })
     });
 
