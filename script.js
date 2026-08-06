@@ -159,10 +159,14 @@ displayFlashcards(aiFlashcards);
 switchView(navFlashcards, viewFlashcards);
 
 const quizText = await generateAIQuiz(uploadedNotes);
+console.log("RAW QUIZ TEXT:", quizText);
 quizData = parseQuiz(quizText);
+console.log("PARSED QUIZ DATA:", quizData);
 currentQuestion = 0;
 score = 0;
-loadQuestion();
+if (quizData.length > 0) {
+    loadQuestion();
+}
 
        const li = document.createElement("li");
        li.textContent = summary;
@@ -386,7 +390,7 @@ function loadQuestion() {
 
 }
 
-loadQuestion();
+
 
 const nextQuestionBtn = document.getElementById("next-question");
 
@@ -415,6 +419,6 @@ nextQuestionBtn.addEventListener("click", function () {
         btn.style.backgroundColor = "";
     });
 
-   
+   loadQuestion();
 
 });
