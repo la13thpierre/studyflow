@@ -15,20 +15,18 @@ document.querySelectorAll(".difficulty-btn").forEach(btn => {
 const fileInput = document.getElementById('file-upload');
 const fileNameDisplay = document.getElementById('file-name');
 const generateBtn = document.getElementById('generate-btn');
+const btnSpinner = document.getElementById('btn-spinner');
+const btnText = document.getElementById('btn-text');
 const aiOutput = document.getElementById('ai-output');
 const summaryPoints = document.getElementById('summary-points');
 
 fileInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
-
-
-    
-    
-  if (file) {
+ if (file) {
 
         fileNameDisplay.innerHTML = "📄 " + file.name;
         generateBtn.style.display = 'inline-block';
-     btnText.textContent = 'Generate Summary';
+        btnText.textContent = 'Generate Summary';
         generateBtn.disabled = false;
         aiOutput.style.display = 'none';
 
