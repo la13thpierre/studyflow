@@ -28,7 +28,7 @@ fileInput.addEventListener('change', function(event) {
 
         fileNameDisplay.innerHTML = "📄 " + file.name;
         generateBtn.style.display = 'inline-block';
-        generateBtn.innerHTML = 'Generate Summary';
+     btnText.textContent = 'Generate Summary';
         generateBtn.disabled = false;
         aiOutput.style.display = 'none';
 
@@ -151,9 +151,9 @@ function parseQuiz(text) {
 
 generateBtn.addEventListener("click", async function () {
 
-    generateBtn.innerHTML = "⏳ Summarising...";
-    generateBtn.disabled = true;
-
+   btnSpinner.style.display = 'inline-block';
+btnText.textContent = 'Summarising...';
+generateBtn.disabled = true;
     summaryPoints.innerHTML = "";
 
 
@@ -182,9 +182,9 @@ if (quizData.length > 0) {
        li.textContent = summary;
        summaryPoints.appendChild(li);
         
-        generateBtn.innerHTML = 'Summary Complete! ✓';
-        generateBtn.disabled = false;
-        aiOutput.style.display = 'block';
+        btnSpinner.style.display = 'none';
+btnText.textContent = 'Summary Complete! ✓';
+generateBtn.disabled = false;
         
 });
 
