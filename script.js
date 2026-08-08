@@ -30,22 +30,62 @@ fileInput.addEventListener('change', function(event) {
         generateBtn.disabled = false;
         aiOutput.style.display = 'none';
 
-        const reader = new FileReader();
+       const extension = file.name.split('.').pop().toLowerCase();
 
-reader.onload = function(e) {
+if (extension === 'txt') {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        uploadedNotes = e.target.result;
+        console.log("Loaded TXT:", uploadedNotes);
+    };
+    reader.readAsText(file);
 
-   const uploadedText = e.target.result;
+} else if (extension === 'docx') {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        mammoth.extractRawText({ arrayBuffer: e.target.result })
+            .then(function(result) {
+                uploadedNotes = result.value;
+                console.log("Loaded DOCX:", uploadedNotes);
+            })
+            .catch(function(err) {
+                console.error("DOCX parsing failed:", err);
+                fileNameDisplay.innerHTML = "❌ Could not read this DOCX file";
+            });
+    };
+    reader.readAsArrayBuffer(file);
 
-uploadedNotes = uploadedText;
+} else if (extension === 'pdf') {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        try {
+            pdfjsLib.GlobalWorkerOptions.workerSrc =
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-console.log(uploadedText);
+            const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
+            let fullText = "";
 
-    console.log(uploadedText);
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const pageText = content.items.map(item => item.str).join(" ");
+                fullText += pageText + "\n";
+            }
 
-};
+            uploadedNotes = fullText;
+            console.log("Loaded PDF:", uploadedNotes);
+        } catch (err) {
+            console.error("PDF parsing failed:", err);
+            fileNameDisplay.innerHTML = "❌ Could not read this PDF file";
+        }
+    };
+    reader.readAsArrayBuffer(file);
 
-reader.readAsText(file);
-    }
+} else {
+    fileNameDisplay.innerHTML = "❌ Unsupported file type";
+}
+}
+
 });
     
   async function generateAISummary(notes) {
