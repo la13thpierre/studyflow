@@ -81,6 +81,35 @@ if (extension === 'txt') {
     };
     reader.readAsArrayBuffer(file);
 
+} else if (extension === 'pptx') {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        try {
+            const zip = await JSZip.loadAsync(e.target.result);
+            const slideFiles = Object.keys(zip.files)
+                .filter(name => name.match(/^ppt\/slides\/slide\d+\.xml$/))
+                .sort();
+
+            let fullText = "";
+
+            for (const slideFile of slideFiles) {
+                const xml = await zip.files[slideFile].async("string");
+                const matches = xml.match(/<a:t>(.*?)<\/a:t>/g) || [];
+                const slideText = matches
+                    .map(m => m.replace(/<\/?a:t>/g, ""))
+                    .join(" ");
+                fullText += slideText + "\n";
+            }
+
+            uploadedNotes = fullText;
+            console.log("Loaded PPTX:", uploadedNotes);
+        } catch (err) {
+            console.error("PPTX parsing failed:", err);
+            fileNameDisplay.innerHTML = "❌ Could not read this PPTX file";
+        }
+    };
+    reader.readAsArrayBuffer(file);
+
 } else {
     fileNameDisplay.innerHTML = "❌ Unsupported file type";
 }
@@ -470,4 +499,46 @@ nextQuestionBtn.addEventListener("click", function () {
 
    loadQuestion();
 
+});
+
+const regenSummaryBtn = document.getElementById('regen-summary-btn');
+const regenFlashcardsBtn = document.getElementById('regen-flashcards-btn');
+const regenQuizBtn = document.getElementById('regen-quiz-btn');
+
+regenSummaryBtn.addEventListener('click', async function () {
+    regenSummaryBtn.disabled = true;
+    regenSummaryBtn.textContent = "⏳ Regenerating...";
+    const summary = await generateAISummary(uploadedNotes);
+    summaryPoints.innerHTML = "";
+    const li = document.createElement("li");
+    li.textContent = summary;
+    summaryPoints.appendChild(li);
+    regenSummaryBtn.disabled = false;
+    regenSummaryBtn.textContent = "🔄 New Summary";
+});
+
+regenFlashcardsBtn.addEventListener('click', async function () {
+    regenFlashcardsBtn.disabled = true;
+    regenFlashcardsBtn.textContent = "⏳ Regenerating...";
+    const flashcardText = await generateAIFlashcards(uploadedNotes);
+    const aiFlashcards = parseFlashcards(flashcardText);
+    displayFlashcards(aiFlashcards);
+    regenFlashcardsBtn.disabled = false;
+    regenFlashcardsBtn.textContent = "🔄 New Flashcards";
+});
+
+regenQuizBtn.addEventListener('click', async function () {
+    regenQuizBtn.disabled = true;
+    regenQuizBtn.textContent = "⏳ Regenerating...";
+    const quizText = await generateAIQuiz(uploadedNotes, selectedDifficulty);
+    quizData = parseQuiz(quizText);
+    currentQuestion = 0;
+    score = 0;
+    if (quizData.length > 0) loadQuestion();
+    quizButtons.forEach(btn => {
+        btn.disabled = false;
+        btn.style.backgroundColor = "";
+    });
+    regenQuizBtn.disabled = false;
+    regenQuizBtn.textContent = "🔄 New Quiz";
 });

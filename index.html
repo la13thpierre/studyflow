@@ -39,7 +39,7 @@
 
         <div class="upload-section">
         <label for="file-upload" class="upload-btn">📄 Upload Notes</label>
-       <input type="file" id="file-upload" accept=".txt,.pdf,.docx" style="display: none;" />
+       <input type="file" id="file-upload" accept=".txt,.pdf,.docx,.pptx" style="display: none;" />
         
         <p id="file-name" class="file-status-text"></p>
         
@@ -52,6 +52,7 @@
         <h3 id="summary-title">📝 AI Summary</h3>
         <ul id="summary-points">
         </ul>
+        <button id="regen-summary-btn" class="action-btn">🔄 New Summary</button>
     </div>
 </div>
 
@@ -92,15 +93,15 @@
             Click the card to reveal the answer.
         </p>
       
-        <div id="flashcard-container"></div>       
-
-      <div class="flashcard-controls">
+        <div class="flashcard-controls">
             <button id="prev-card">⬅ Previous</button>
 
             <span id="card-counter">1 / 2</span>
 
             <button id="next-card">Next ➡</button>
         </div>
+
+        <button id="regen-flashcards-btn" class="action-btn">🔄 New Flashcards</button>
 
     </div>
 
@@ -123,6 +124,8 @@
     <button class="difficulty-btn" data-level="Medium">Medium</button>
     <button class="difficulty-btn" data-level="Hard">Hard</button>
 </div>
+
+        <button id="regen-quiz-btn" class="action-btn">🔄 New Quiz</button>
 
         <div class="quiz-card">
 
@@ -148,6 +151,7 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
