@@ -1,3 +1,8 @@
+const SUPABASE_URL = "https://vakdkccooxldulswmuni.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZha2RrY2Nvb3hsZHVsc3dtdW5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODQyMzksImV4cCI6MjEwMTg2MDIzOX0.kXtGgBenhrPqNsCIqisZW3SrhJ3il2p_TUv50UO2HUM";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 let uploadedNotes = "";
 let flashcards = [];
 let selectedDifficulty = "Medium"; // default
