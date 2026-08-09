@@ -477,7 +477,7 @@ nextQuestionBtn.addEventListener("click", function () {
 
     currentQuestion++;
 
-    if (currentQuestion >= quizData.length) {
+  if (currentQuestion >= quizData.length) {
 
         quizQuestion.innerHTML = "🎉 Quiz Complete!";
 
@@ -488,6 +488,12 @@ nextQuestionBtn.addEventListener("click", function () {
 
         nextQuestionBtn.innerHTML =
             "Score: " + score + " / " + quizData.length;
+
+        confetti({
+            particleCount: 150,
+            spread: 90,
+            origin: { y: 0.6 }
+        });
 
         return;
     }
