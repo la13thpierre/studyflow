@@ -305,7 +305,34 @@ generateBtn.disabled = true;
     summaryPoints.innerHTML = "";
 
 
-       const summary = await generateAISummary(uploadedNotes);
+      const summary = await generateAISummary(uploadedNotes);
+
+   const { data: { user } } = await supabaseClient.auth.getUser();
+   let currentNoteId = null;
+
+   if (user) {
+       const { data: noteData, error: noteError } = await supabaseClient
+           .from('notes')
+           .insert({
+               user_id: user.id,
+               title: fileNameDisplay.textContent.replace("📄 ", ""),
+               raw_text: uploadedNotes
+           })
+           .select()
+           .single();
+
+       if (!noteError) {
+           currentNoteId = noteData.id;
+
+           await supabaseClient.from('summaries').insert({
+               user_id: user.id,
+               note_id: currentNoteId,
+               content: summary
+           });
+       } else {
+           console.error("Failed to save note:", noteError);
+       }
+   }
 
    const flashcardText = await generateAIFlashcards(uploadedNotes);
 
