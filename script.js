@@ -41,6 +41,17 @@ document.getElementById('logout-btn').addEventListener('click', async function (
     checkAuthState();
 });
 
+const authContainer = document.getElementById('auth-container');
+const navAuth = document.getElementById('nav-auth');
+
+navAuth.addEventListener('click', function() {
+    if (authContainer.style.display === 'none') {
+        authContainer.style.display = 'block';
+    } else {
+        authContainer.style.display = 'none';
+    }
+});
+
 async function checkAuthState() {
     const { data: { user } } = await supabaseClient.auth.getUser();
 
@@ -48,9 +59,11 @@ async function checkAuthState() {
         authLoggedOut.style.display = 'none';
         authLoggedIn.style.display = 'block';
         userEmailSpan.textContent = user.email;
+        navAuth.textContent = user.email;
     } else {
         authLoggedOut.style.display = 'block';
         authLoggedIn.style.display = 'none';
+        navAuth.textContent = "Sign In";
     }
 }
 
