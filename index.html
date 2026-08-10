@@ -13,14 +13,27 @@
     <nav class="navbar">
     <div class="nav-container">
         <span class="nav-logo">⚡ StudyFlow</span>
-        <div class="nav-links">
-            <button class="nav-btn active" id="nav-summary">Summariser</button>
-            <button class="nav-btn" id="nav-flashcards">Flashcards</button>
-            <button class="nav-btn" id="nav-quizzes">Quizzes</button>
-        </div>
+     <div class="nav-links">
+    <button class="nav-btn active" id="nav-summary">Summariser</button>
+    <button class="nav-btn" id="nav-flashcards">Flashcards</button>
+    <button class="nav-btn" id="nav-quizzes">Quizzes</button>
+    <button class="nav-btn" id="nav-auth">Sign In</button>
+</div>
     </div>
 </nav>
-
+<div id="auth-container" style="text-align:center; padding: 20px;">
+    <div id="auth-logged-out">
+        <input type="email" id="auth-email" placeholder="Email" />
+        <input type="password" id="auth-password" placeholder="Password" />
+        <button id="signup-btn" class="action-btn">Sign Up</button>
+        <button id="login-btn" class="action-btn">Log In</button>
+        <p id="auth-message" style="color:#EF4444;"></p>
+    </div>
+    <div id="auth-logged-in" style="display:none;">
+        <p>Logged in as <span id="user-email"></span></p>
+        <button id="logout-btn" class="action-btn">Log Out</button>
+    </div>
+</div>
 <div id="view-summary" class="app-view">
 
     <div class="container">

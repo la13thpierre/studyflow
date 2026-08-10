@@ -2,6 +2,59 @@ const SUPABASE_URL = "https://vakdkccooxldulswmuni.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZha2RrY2Nvb3hsZHVsc3dtdW5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyODQyMzksImV4cCI6MjEwMTg2MDIzOX0.kXtGgBenhrPqNsCIqisZW3SrhJ3il2p_TUv50UO2HUM";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const authLoggedOut = document.getElementById('auth-logged-out');
+const authLoggedIn = document.getElementById('auth-logged-in');
+const authEmail = document.getElementById('auth-email');
+const authPassword = document.getElementById('auth-password');
+const authMessage = document.getElementById('auth-message');
+const userEmailSpan = document.getElementById('user-email');
+
+document.getElementById('signup-btn').addEventListener('click', async function () {
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: authEmail.value,
+        password: authPassword.value
+    });
+
+    if (error) {
+        authMessage.textContent = error.message;
+    } else {
+        authMessage.style.color = "#10B981";
+        authMessage.textContent = "Check your email to confirm your account!";
+    }
+});
+
+document.getElementById('login-btn').addEventListener('click', async function () {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: authEmail.value,
+        password: authPassword.value
+    });
+
+    if (error) {
+        authMessage.textContent = error.message;
+    } else {
+        checkAuthState();
+    }
+});
+
+document.getElementById('logout-btn').addEventListener('click', async function () {
+    await supabaseClient.auth.signOut();
+    checkAuthState();
+});
+
+async function checkAuthState() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+
+    if (user) {
+        authLoggedOut.style.display = 'none';
+        authLoggedIn.style.display = 'block';
+        userEmailSpan.textContent = user.email;
+    } else {
+        authLoggedOut.style.display = 'block';
+        authLoggedIn.style.display = 'none';
+    }
+}
+
+checkAuthState();
 
 let uploadedNotes = "";
 let flashcards = [];
