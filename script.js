@@ -41,6 +41,16 @@ document.getElementById('logout-btn').addEventListener('click', async function (
     checkAuthState();
 });
 
+document.getElementById('google-login-btn').addEventListener('click', async function () {
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google'
+    });
+
+    if (error) {
+        authMessage.textContent = error.message;
+    }
+});
+
 const authContainer = document.getElementById('auth-container');
 const navAuth = document.getElementById('nav-auth');
 
