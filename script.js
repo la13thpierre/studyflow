@@ -9,6 +9,9 @@ const authPassword = document.getElementById('auth-password');
 const authMessage = document.getElementById('auth-message');
 const userEmailSpan = document.getElementById('user-email');
 
+let currentUser = null;
+let currentNoteId = null;
+
 document.getElementById('signup-btn').addEventListener('click', async function () {
     const { data, error } = await supabaseClient.auth.signUp({
         email: authEmail.value,
@@ -308,7 +311,8 @@ generateBtn.disabled = true;
       const summary = await generateAISummary(uploadedNotes);
 
    const { data: { user } } = await supabaseClient.auth.getUser();
-   let currentNoteId = null;
+   currentUser = user;
+   currentNoteId = null;
 
    if (user) {
        const { data: noteData, error: noteError } = await supabaseClient
@@ -336,6 +340,19 @@ generateBtn.disabled = true;
 
    const flashcardText = await generateAIFlashcards(uploadedNotes);
 
+   if (currentUser && currentNoteId) {
+       const aiFlashcardsForSave = parseFlashcards(flashcardText);
+       const flashcardRows = aiFlashcardsForSave.map(card => ({
+           user_id: currentUser.id,
+           note_id: currentNoteId,
+           question: card.question,
+           answer: card.answer
+       }));
+
+       if (flashcardRows.length > 0) {
+           await supabaseClient.from('flashcards').insert(flashcardRows);
+       }
+   }
 const aiFlashcards = parseFlashcards(flashcardText);
 
 console.log(aiFlashcards);
