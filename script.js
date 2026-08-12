@@ -610,8 +610,7 @@ nextQuestionBtn.addEventListener("click", function () {
         option1.style.display = "none";
         option2.style.display = "none";
         option3.style.display = "none";
-
-        nextQuestionBtn.innerHTML =
+nextQuestionBtn.innerHTML =
             "Score: " + score + " / " + quizData.length;
 
         confetti({
@@ -619,6 +618,16 @@ nextQuestionBtn.addEventListener("click", function () {
             spread: 90,
             origin: { y: 0.6 }
         });
+
+        if (currentUser && currentNoteId) {
+            supabaseClient.from('quiz_attempts').insert({
+                user_id: currentUser.id,
+                note_id: currentNoteId,
+                difficulty: selectedDifficulty,
+                score: score,
+                total_questions: quizData.length
+            });
+        }
 
         return;
     }
