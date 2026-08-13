@@ -17,6 +17,7 @@
     <button class="nav-btn active" id="nav-summary">Summariser</button>
     <button class="nav-btn" id="nav-flashcards">Flashcards</button>
     <button class="nav-btn" id="nav-quizzes">Quizzes</button>
+    <button class="nav-btn" id="nav-dashboard">Dashboard</button>
     <button class="nav-btn" id="nav-auth">Sign In</button>
 </div>
     </div>
@@ -141,6 +142,36 @@
     <button class="difficulty-btn" data-level="Easy">Easy</button>
     <button class="difficulty-btn" data-level="Medium">Medium</button>
     <button class="difficulty-btn" data-level="Hard">Hard</button>
+</div>
+
+<div id="view-dashboard" class="app-view" style="display:none;">
+    <div class="container">
+        <h1>Your Dashboard</h1>
+        <p class="description">Track your study progress.</p>
+
+        <div id="dashboard-stats" style="display:flex; justify-content:center; gap:25px; flex-wrap:wrap; margin-top:30px;">
+            <div class="card">
+                <div class="icon">📄</div>
+                <h3 id="stat-notes">0</h3>
+                <p>Notes Uploaded</p>
+            </div>
+            <div class="card">
+                <div class="icon">🧠</div>
+                <h3 id="stat-flashcards">0</h3>
+                <p>Flashcards Generated</p>
+            </div>
+            <div class="card">
+                <div class="icon">✅</div>
+                <h3 id="stat-quizzes">0</h3>
+                <p>Quizzes Completed</p>
+            </div>
+            <div class="card">
+                <div class="icon">📊</div>
+                <h3 id="stat-avg-score">0%</h3>
+                <p>Average Score</p>
+            </div>
+        </div>
+    </div>
 </div>
 
         <button id="regen-quiz-btn" class="action-btn">🔄 New Quiz</button>

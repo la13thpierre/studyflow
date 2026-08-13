@@ -408,6 +408,54 @@ navQuizzes.addEventListener('click', function() {
     switchView(navQuizzes, viewQuizzes);
 });
 
+const navDashboard = document.getElementById('nav-dashboard');
+const viewDashboard = document.getElementById('view-dashboard');
+
+navDashboard.addEventListener('click', async function() {
+    switchView(navDashboard, viewDashboard);
+    await loadDashboardStats();
+});
+
+async function loadDashboardStats() {
+    if (!currentUser) {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        currentUser = user;
+    }
+
+    if (!currentUser) {
+        return;
+    }
+
+    const { count: notesCount } = await supabaseClient
+        .from('notes')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id);
+
+    const { count: flashcardsCount } = await supabaseClient
+        .from('flashcards')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id);
+
+    const { data: quizAttempts } = await supabaseClient
+        .from('quiz_attempts')
+        .select('score, total_questions')
+        .eq('user_id', currentUser.id);
+
+    document.getElementById('stat-notes').textContent = notesCount || 0;
+    document.getElementById('stat-flashcards').textContent = flashcardsCount || 0;
+    document.getElementById('stat-quizzes').textContent = quizAttempts ? quizAttempts.length : 0;
+
+    if (quizAttempts && quizAttempts.length > 0) {
+        const totalPercent = quizAttempts.reduce((sum, attempt) => {
+            return sum + (attempt.score / attempt.total_questions) * 100;
+        }, 0);
+        const avgPercent = Math.round(totalPercent / quizAttempts.length);
+        document.getElementById('stat-avg-score').textContent = avgPercent + "%";
+    } else {
+        document.getElementById('stat-avg-score').textContent = "0%";
+    }
+}
+
 
 const flashcardContainer = document.getElementById("flashcard-container");
 const nextBtn = document.getElementById("next-card");
