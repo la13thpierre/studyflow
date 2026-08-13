@@ -598,7 +598,7 @@ function loadQuestion() {
 const nextQuestionBtn = document.getElementById("next-question");
 
 
-nextQuestionBtn.addEventListener("click", function () {
+nextQuestionBtn.addEventListener("click", async function () {
 
     currentQuestion++;
 
@@ -620,13 +620,17 @@ nextQuestionBtn.innerHTML =
         });
 
         if (currentUser && currentNoteId) {
-            supabaseClient.from('quiz_attempts').insert({
+            const { error: quizError } = await supabaseClient.from('quiz_attempts').insert({
                 user_id: currentUser.id,
                 note_id: currentNoteId,
                 difficulty: selectedDifficulty,
                 score: score,
                 total_questions: quizData.length
             });
+
+            if (quizError) {
+                console.error("Failed to save quiz attempt:", quizError);
+            }
         }
 
         return;
