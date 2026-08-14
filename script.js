@@ -445,7 +445,7 @@ async function loadDashboardStats() {
     document.getElementById('stat-flashcards').textContent = flashcardsCount || 0;
     document.getElementById('stat-quizzes').textContent = quizAttempts ? quizAttempts.length : 0;
 
-    if (quizAttempts && quizAttempts.length > 0) {
+if (quizAttempts && quizAttempts.length > 0) {
         const totalPercent = quizAttempts.reduce((sum, attempt) => {
             return sum + (attempt.score / attempt.total_questions) * 100;
         }, 0);
@@ -454,8 +454,45 @@ async function loadDashboardStats() {
     } else {
         document.getElementById('stat-avg-score').textContent = "0%";
     }
+
+    const { data: notesForStreak } = await supabaseClient
+        .from('notes')
+        .select('created_at')
+        .eq('user_id', currentUser.id);
+
+    const streak = calculateStreak(notesForStreak);
+    document.getElementById('stat-streak').textContent = streak;
 }
 
+function calculateStreak(rows) {
+    if (!rows || rows.length === 0) return 0;
+
+    const uniqueDays = new Set(
+        rows.map(row => new Date(row.created_at).toDateString())
+    );
+
+    const dayList = Array.from(uniqueDays).map(d => new Date(d));
+    dayList.sort((a, b) => b - a);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let streak = 0;
+    let expectedDate = new Date(today);
+
+    for (const day of dayList) {
+        day.setHours(0, 0, 0, 0);
+
+        if (day.getTime() === expectedDate.getTime()) {
+            streak++;
+            expectedDate.setDate(expectedDate.getDate() - 1);
+        } else if (day.getTime() < expectedDate.getTime()) {
+            break;
+        }
+    }
+
+    return streak;
+}
 
 const flashcardContainer = document.getElementById("flashcard-container");
 const nextBtn = document.getElementById("next-card");
