@@ -25,3 +25,11 @@ jobs:
           context: .
           push: true
           tags: la13th/studyflow:latest
+
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: la13th/studyflow:latest
+          format: table
+          exit-code: 0
+          severity: CRITICAL,HIGH
