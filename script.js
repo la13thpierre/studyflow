@@ -54,6 +54,16 @@ document.getElementById('google-login-btn').addEventListener('click', async func
     }
 });
 
+document.getElementById('facebook-login-btn').addEventListener('click', async function () {
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'facebook'
+    });
+
+    if (error) {
+        authMessage.textContent = error.message;
+    }
+});
+
 const authContainer = document.getElementById('auth-container');
 const navAuth = document.getElementById('nav-auth');
 
