@@ -780,8 +780,9 @@ regenQuizBtn.addEventListener('click', async function () {
     });
     regenQuizBtn.disabled = false;
     regenQuizBtn.textContent = "🔄 New Quiz";
+});
 
-    const navReview = document.getElementById('nav-review');
+const navReview = document.getElementById('nav-review');
 const viewReview = document.getElementById('view-review');
 const reviewCardContainer = document.getElementById('review-card-container');
 const reviewControls = document.getElementById('review-controls');
@@ -893,5 +894,4 @@ document.getElementById('review-got-it').addEventListener('click', function () {
 
 document.getElementById('review-didnt-know').addEventListener('click', function () {
     answerReviewCard(false);
-});
 });
