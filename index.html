@@ -17,8 +17,9 @@
     <button class="nav-btn active" id="nav-summary">Summariser</button>
     <button class="nav-btn" id="nav-flashcards">Flashcards</button>
     <button class="nav-btn" id="nav-quizzes">Quizzes</button>
-    <button class="nav-btn" id="nav-dashboard">Dashboard</button>
+    <button class="nav-btn" id="nav-review">Review</button>
     <button class="nav-btn" id="nav-auth">Sign In</button>
+    <button class="nav-btn" id="nav-dashboard">Dashboard</button>
 </div>
     </div>
 </nav>
@@ -205,6 +206,24 @@
             </div>
         </div>
     </div>
+<div id="view-review" class="app-view" style="display:none;">
+    <div class="container">
+        <h1>Review</h1>
+        <p class="description">Cards due for review today.</p>
+
+        <div id="review-empty" style="display:none;">
+            <p>🎉 No cards due right now — check back later!</p>
+        </div>
+
+        <div id="review-card-container"></div>
+
+        <div id="review-controls" style="display:none; margin-top:20px;">
+            <button id="review-didnt-know" class="action-btn" style="background-color:#EF4444;">Didn't Know It</button>
+            <button id="review-got-it" class="action-btn" style="background-color:#10B981;">Got It</button>
+        </div>
+    </div>
+</div>
+
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>

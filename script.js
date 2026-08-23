@@ -780,4 +780,118 @@ regenQuizBtn.addEventListener('click', async function () {
     });
     regenQuizBtn.disabled = false;
     regenQuizBtn.textContent = "🔄 New Quiz";
+
+    const navReview = document.getElementById('nav-review');
+const viewReview = document.getElementById('view-review');
+const reviewCardContainer = document.getElementById('review-card-container');
+const reviewControls = document.getElementById('review-controls');
+const reviewEmpty = document.getElementById('review-empty');
+
+let reviewQueue = [];
+let currentReviewCard = null;
+
+navReview.addEventListener('click', async function () {
+    switchView(navReview, viewReview);
+    await loadReviewQueue();
+});
+
+async function loadReviewQueue() {
+    if (!currentUser) {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        currentUser = user;
+    }
+
+    if (!currentUser) {
+        reviewCardContainer.innerHTML = "<p>Please sign in to review flashcards.</p>";
+        reviewControls.style.display = 'none';
+        reviewEmpty.style.display = 'none';
+        return;
+    }
+
+    const { data: dueCards, error } = await supabaseClient
+        .from('flashcards')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .lte('next_review_date', new Date().toISOString())
+        .order('next_review_date', { ascending: true });
+
+    if (error) {
+        console.error("Failed to load review queue:", error);
+        return;
+    }
+
+    reviewQueue = dueCards || [];
+    showNextReviewCard();
+}
+
+function showNextReviewCard() {
+    if (reviewQueue.length === 0) {
+        reviewCardContainer.innerHTML = "";
+        reviewControls.style.display = 'none';
+        reviewEmpty.style.display = 'block';
+        currentReviewCard = null;
+        return;
+    }
+
+    reviewEmpty.style.display = 'none';
+    reviewControls.style.display = 'block';
+
+    currentReviewCard = reviewQueue[0];
+
+    reviewCardContainer.innerHTML = `
+        <div class="flashcard active-card" id="review-flip-card">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <h2>Question</h2>
+                    <p>${currentReviewCard.question}</p>
+                </div>
+                <div class="flashcard-back">
+                    <h2>Answer</h2>
+                    <p>${currentReviewCard.answer}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('review-flip-card').addEventListener('click', function () {
+        this.classList.toggle('flip');
+    });
+}
+
+async function answerReviewCard(gotIt) {
+    if (!currentReviewCard) return;
+
+    let newInterval;
+    if (gotIt) {
+        newInterval = Math.min((currentReviewCard.interval_days || 1) * 2, 60);
+    } else {
+        newInterval = 1;
+    }
+
+    const nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + newInterval);
+
+    const { error } = await supabaseClient
+        .from('flashcards')
+        .update({
+            interval_days: newInterval,
+            next_review_date: nextDate.toISOString()
+        })
+        .eq('id', currentReviewCard.id);
+
+    if (error) {
+        console.error("Failed to update card:", error);
+    }
+
+    reviewQueue.shift();
+    showNextReviewCard();
+}
+
+document.getElementById('review-got-it').addEventListener('click', function () {
+    answerReviewCard(true);
+});
+
+document.getElementById('review-didnt-know').addEventListener('click', function () {
+    answerReviewCard(false);
+});
 });
