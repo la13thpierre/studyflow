@@ -312,82 +312,84 @@ function parseQuiz(text) {
 
 generateBtn.addEventListener("click", async function () {
 
-   btnSpinner.style.display = 'inline-block';
-btnText.textContent = 'Summarising...';
-generateBtn.disabled = true;
+    btnSpinner.style.display = 'inline-block';
+    btnText.textContent = 'Summarising...';
+    generateBtn.disabled = true;
     summaryPoints.innerHTML = "";
 
+    try {
+        const summary = await generateAISummary(uploadedNotes);
 
-      const summary = await generateAISummary(uploadedNotes);
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        currentUser = user;
+        currentNoteId = null;
 
-   const { data: { user } } = await supabaseClient.auth.getUser();
-   currentUser = user;
-   currentNoteId = null;
+        if (user) {
+            const { data: noteData, error: noteError } = await supabaseClient
+                .from('notes')
+                .insert({
+                    user_id: user.id,
+                    title: fileNameDisplay.textContent.replace("📄 ", ""),
+                    raw_text: uploadedNotes
+                })
+                .select()
+                .single();
 
-   if (user) {
-       const { data: noteData, error: noteError } = await supabaseClient
-           .from('notes')
-           .insert({
-               user_id: user.id,
-               title: fileNameDisplay.textContent.replace("📄 ", ""),
-               raw_text: uploadedNotes
-           })
-           .select()
-           .single();
+            if (!noteError) {
+                currentNoteId = noteData.id;
 
-       if (!noteError) {
-           currentNoteId = noteData.id;
+                await supabaseClient.from('summaries').insert({
+                    user_id: user.id,
+                    note_id: currentNoteId,
+                    content: summary
+                });
+            } else {
+                console.error("Failed to save note:", noteError);
+            }
+        }
 
-           await supabaseClient.from('summaries').insert({
-               user_id: user.id,
-               note_id: currentNoteId,
-               content: summary
-           });
-       } else {
-           console.error("Failed to save note:", noteError);
-       }
-   }
+        const flashcardText = await generateAIFlashcards(uploadedNotes);
 
-   const flashcardText = await generateAIFlashcards(uploadedNotes);
+        if (currentUser && currentNoteId) {
+            const aiFlashcardsForSave = parseFlashcards(flashcardText);
+            const flashcardRows = aiFlashcardsForSave.map(card => ({
+                user_id: currentUser.id,
+                note_id: currentNoteId,
+                question: card.question,
+                answer: card.answer
+            }));
 
-   if (currentUser && currentNoteId) {
-       const aiFlashcardsForSave = parseFlashcards(flashcardText);
-       const flashcardRows = aiFlashcardsForSave.map(card => ({
-           user_id: currentUser.id,
-           note_id: currentNoteId,
-           question: card.question,
-           answer: card.answer
-       }));
+            if (flashcardRows.length > 0) {
+                await supabaseClient.from('flashcards').insert(flashcardRows);
+            }
+        }
 
-       if (flashcardRows.length > 0) {
-           await supabaseClient.from('flashcards').insert(flashcardRows);
-       }
-   }
-const aiFlashcards = parseFlashcards(flashcardText);
+        const aiFlashcards = parseFlashcards(flashcardText);
+        displayFlashcards(aiFlashcards);
+        switchView(navFlashcards, viewFlashcards);
 
-console.log(aiFlashcards);
+        const quizText = await generateAIQuiz(uploadedNotes, selectedDifficulty);
+        quizData = parseQuiz(quizText);
+        currentQuestion = 0;
+        score = 0;
+        if (quizData.length > 0) {
+            loadQuestion();
+        }
 
-displayFlashcards(aiFlashcards);
-switchView(navFlashcards, viewFlashcards);
+        const li = document.createElement("li");
+        li.textContent = summary;
+        summaryPoints.appendChild(li);
 
-const quizText = await generateAIQuiz(uploadedNotes, selectedDifficulty);
-console.log("RAW QUIZ TEXT:", quizText);
-quizData = parseQuiz(quizText);
-console.log("PARSED QUIZ DATA:", quizData);
-currentQuestion = 0;
-score = 0;
-if (quizData.length > 0) {
-    loadQuestion();
-}
-
-       const li = document.createElement("li");
-       li.textContent = summary;
-       summaryPoints.appendChild(li);
-        
         btnSpinner.style.display = 'none';
-btnText.textContent = 'Summary Complete! ✓';
-generateBtn.disabled = false;
-        
+        btnText.textContent = 'Summary Complete! ✓';
+        generateBtn.disabled = false;
+
+    } catch (error) {
+        console.error("Generation failed:", error);
+        btnSpinner.style.display = 'none';
+        btnText.textContent = '⚠️ Gemini is busy — try again in a moment';
+        generateBtn.disabled = false;
+    }
 });
 
 const navSummary = document.getElementById('nav-summary');
