@@ -7,18 +7,40 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-async function callGeminiWithRetry(url, options, maxRetries = 3) {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        const response = await fetch(url, options);
-        if (response.status !== 503) return response;
-        if (attempt < maxRetries) {
-            await new Promise(resolve => setTimeout(resolve, attempt * 1000));
-        } else {
-            return response;
+async function callGeminiWithRetry(promptText, maxRetries = 3) {
+    const models = ["gemini-flash-latest", "gemini-2.5-flash-lite"];
+
+    let lastResponse;
+
+    for (const model of models) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": process.env.GEMINI_API_KEY
+                },
+                body: JSON.stringify({
+                    contents: [
+                        { parts: [{ text: promptText }] }
+                    ]
+                })
+            });
+
+            if (response.status !== 503) return response;
+
+            lastResponse = response;
+
+            if (attempt < maxRetries) {
+                await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+            }
         }
     }
-}
 
+    return lastResponse;
+}
 app.post('/api/summarise', async (req, res) => {
     try {
         const { notes } = req.body;
@@ -27,25 +49,9 @@ app.post('/api/summarise', async (req, res) => {
             return res.status(400).json({ error: "No notes provided" });
         }
 
-        const response = await callGeminiWithRetry(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-goog-api-key": process.env.GEMINI_API_KEY
-                },
-                body: JSON.stringify({
-                    contents: [
-                        {
-                            parts: [
-                                { text: `Summarise these revision notes into short bullet points:\n\n${notes}` }
-                            ]
-                        }
-                    ]
-                })
-            }
-        );
+        const promptText = `Summarise these revision notes into short bullet points:\n\n${notes}`;
+
+        const response = await callGeminiWithRetry(promptText);
 
         const data = await response.json();
 
@@ -76,20 +82,7 @@ app.post('/api/flashcards', async (req, res) => {
             return res.status(400).json({ error: "No notes provided" });
         }
 
-        const response = await callGeminiWithRetry(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-goog-api-key": process.env.GEMINI_API_KEY
-                },
-                body: JSON.stringify({
-                    contents: [
-                        {
-                            parts: [
-                                {
-                                    text: `Turn these revision notes into 5 flashcards.
+        const promptText = `Turn these revision notes into 5 flashcards.
 
 Do NOT use markdown, asterisks, or bold formatting. Plain text only.
 
@@ -111,14 +104,9 @@ Question: ...
 Answer: ...
 
 Notes:
-${notes}`
-                                }
-                            ]
-                        }
-                    ]
-                })
-            }
-        );
+${notes}`;
+
+        const response = await callGeminiWithRetry(promptText);
 
         const data = await response.json();
 
@@ -157,20 +145,7 @@ app.post('/api/quiz', async (req, res) => {
             Hard: "Make the questions difficult, testing deep understanding, edge cases, and critical thinking."
         };
 
-        const response = await callGeminiWithRetry(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-goog-api-key": process.env.GEMINI_API_KEY
-                },
-                body: JSON.stringify({
-                    contents: [
-                        {
-                            parts: [
-                                {
-                                    text: `Turn these revision notes into 5 multiple choice quiz questions.
+        const promptText = `Turn these revision notes into 5 multiple choice quiz questions.
 
 Difficulty: ${level}. ${difficultyInstructions[level]}
 
@@ -185,14 +160,9 @@ D) ...
 Correct: A
 
 Notes:
-${notes}`
-                                }
-                            ]
-                        }
-                    ]
-                })
-            }
-        );
+${notes}`;
+
+        const response = await callGeminiWithRetry(promptText);
 
         const data = await response.json();
 
