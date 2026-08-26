@@ -64,28 +64,36 @@ async function summariseNotes(notes) {
 
 // Tries Gemini (2 models, short retry), falls back to Groq (with rate-limit retry) if both are overloaded
 const GEMINI_MODELS = ["gemini-flash-latest", "gemini-2.5-flash-lite"];
+const GEMINI_TIMEOUT_MS = 6000;
 
 async function generateAIContent(prompt) {
     for (const model of GEMINI_MODELS) {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
-        for (let attempt = 1; attempt <= 2; attempt++) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
+
+        try {
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "x-goog-api-key": process.env.GEMINI_API_KEY
                 },
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             if (response.ok) {
                 const data = await response.json();
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) return { text, provider: model };
             }
-
-            if (response.status !== 503) break;
-            if (attempt < 2) await new Promise(r => setTimeout(r, 2000));
+            // any non-ok response (503, slow, etc) just moves to the next model
+        } catch (err) {
+            clearTimeout(timeoutId);
+            // timeout or network error — move to next model
         }
     }
 
