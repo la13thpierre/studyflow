@@ -4,33 +4,21 @@ export default async function handler(req, res) {
     }
 
     try {
-       const { notes, difficulty } = req.body;
+        const { notes, difficulty } = req.body;
 
         if (!notes) {
-    return res.status(400).json({ error: "No notes provided" });
-}
+            return res.status(400).json({ error: "No notes provided" });
+        }
 
-const level = difficulty || "Medium";
+        const level = difficulty || "Medium";
 
-const difficultyInstructions = {
-    Easy: "Make the questions simple, testing basic recall of facts.",
-    Medium: "Make the questions moderately challenging, testing understanding and application.",
-    Hard: "Make the questions difficult, testing deep understanding, edge cases, and critical thinking."
-};
-        const response = await callGeminiWithRetry(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-goog-api-key": process.env.GEMINI_API_KEY
-                },
-                body: JSON.stringify({
-                    contents: [
-                        {
-                            parts: [
-                                {
-                                    text: `Turn these revision notes into 5 multiple choice quiz questions.
+        const difficultyInstructions = {
+            Easy: "Make the questions simple, testing basic recall of facts.",
+            Medium: "Make the questions moderately challenging, testing understanding and application.",
+            Hard: "Make the questions difficult, testing deep understanding, edge cases, and critical thinking."
+        };
+
+        const prompt = `Turn these revision notes into 5 multiple choice quiz questions.
 
 Difficulty: ${level}. ${difficultyInstructions[level]}
 
@@ -45,45 +33,72 @@ D) ...
 Correct: A
 
 Notes:
-${notes}`
-                                }
-                            ]
-                        }
-                    ]
-                })
-            }
-        );
+${notes}`;
 
-        const data = await response.json();
-
-        if (!response.ok) {
-            return res.status(response.status).json({
-                error: data.error?.message || "Gemini API request failed"
-            });
+        let quiz, provider;
+        try {
+            const result = await generateAIContent(prompt);
+            quiz = result.text;
+            provider = result.provider;
+        } catch (err) {
+            return res.status(500).json({ error: err.message });
         }
 
-        const quiz = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!quiz) {
-            return res.status(500).json({ error: "No quiz was returned" });
-        }
-
-        return res.status(200).json({ quiz: quiz });
+        return res.status(200).json({ quiz, provider });
 
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 }
 
-// same retry helper you already added to the other two files
-async function callGeminiWithRetry(url, options, maxRetries = 3) {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        const response = await fetch(url, options);
-        if (response.status !== 503) return response;
-        if (attempt < maxRetries) {
-            await new Promise(resolve => setTimeout(resolve, attempt * 1000));
-        } else {
-            return response;
+// Tries Gemini (2 models, short retry), falls back to Groq if both are overloaded
+const GEMINI_MODELS = ["gemini-flash-latest", "gemini-2.5-flash-lite"];
+
+async function generateAIContent(prompt) {
+    for (const model of GEMINI_MODELS) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+        for (let attempt = 1; attempt <= 2; attempt++) {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": process.env.GEMINI_API_KEY
+                },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) return { text, provider: model };
+            }
+
+            if (response.status !== 503) break; // real error, not overload — don't keep retrying this model
+            if (attempt < 2) await new Promise(r => setTimeout(r, 2000));
         }
     }
+
+    // Both Gemini models exhausted — fall back to Groq
+    const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
+        },
+        body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [{ role: "user", content: prompt }]
+        })
+    });
+
+    if (!groqResponse.ok) {
+        const errData = await groqResponse.json().catch(() => ({}));
+        throw new Error(errData.error?.message || "All providers failed (Gemini + Groq)");
+    }
+
+    const groqData = await groqResponse.json();
+    const text = groqData.choices?.[0]?.message?.content;
+    if (!text) throw new Error("Groq returned no content");
+
+    return { text, provider: "groq-llama-3.3-70b" };
 }
