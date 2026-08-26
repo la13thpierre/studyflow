@@ -40,28 +40,29 @@ function chunkText(text, maxChars = CHUNK_CHAR_LIMIT) {
 async function summariseNotes(notes) {
     const chunks = chunkText(notes);
 
-    // Short notes: summarise directly, no need to chunk
     if (chunks.length === 1) {
         const prompt = `Summarise these revision notes into short bullet points:\n\n${notes}`;
         return await generateAIContent(prompt);
     }
 
-    // Long notes: summarise each chunk, then combine into one final summary
     const chunkSummaries = [];
 
-    for (const chunk of chunks) {
-        const prompt = `Summarise this section of revision notes into short bullet points:\n\n${chunk}`;
+    for (let i = 0; i < chunks.length; i++) {
+        const prompt = `Summarise this section of revision notes into short bullet points:\n\n${chunks[i]}`;
         const result = await generateAIContent(prompt);
         chunkSummaries.push(result.text);
+
+        // Small pause between chunks to avoid stacking up Groq's per-minute token limit
+        if (i < chunks.length - 1) {
+            await new Promise(r => setTimeout(r, 4000));
+        }
     }
 
     const combinePrompt = `Combine and condense these section summaries into one clean, well-organised set of bullet point revision notes. Remove repetition, keep it concise:\n\n${chunkSummaries.join("\n\n")}`;
-    const finalResult = await generateAIContent(combinePrompt);
-
-    return finalResult;
+    return await generateAIContent(combinePrompt);
 }
 
-// Tries Gemini (2 models, short retry), falls back to Groq if both are overloaded
+// Tries Gemini (2 models, short retry), falls back to Groq (with rate-limit retry) if both are overloaded
 const GEMINI_MODELS = ["gemini-flash-latest", "gemini-2.5-flash-lite"];
 
 async function generateAIContent(prompt) {
@@ -88,26 +89,37 @@ async function generateAIContent(prompt) {
         }
     }
 
-    const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
-        },
-        body: JSON.stringify({
-            model: "openai/gpt-oss-120b",
-            messages: [{ role: "user", content: prompt }]
-        })
-    });
+    // Fall back to Groq, retrying once if we hit its rate limit
+    for (let attempt = 1; attempt <= 2; attempt++) {
+        const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: "openai/gpt-oss-120b",
+                messages: [{ role: "user", content: prompt }]
+            })
+        });
 
-    if (!groqResponse.ok) {
+        if (groqResponse.ok) {
+            const groqData = await groqResponse.json();
+            const text = groqData.choices?.[0]?.message?.content;
+            if (text) return { text, provider: "groq-openai-gpt-oss-120b" };
+        }
+
+        if (groqResponse.status === 429 && attempt < 2) {
+            const errData = await groqResponse.json().catch(() => ({}));
+            const match = errData.error?.message?.match(/try again in ([\d.]+)s/);
+            const waitMs = match ? Math.ceil(parseFloat(match[1]) * 1000) + 500 : 20000;
+            await new Promise(r => setTimeout(r, waitMs));
+            continue;
+        }
+
         const errData = await groqResponse.json().catch(() => ({}));
         throw new Error(errData.error?.message || "All providers failed (Gemini + Groq)");
     }
 
-    const groqData = await groqResponse.json();
-    const text = groqData.choices?.[0]?.message?.content;
-    if (!text) throw new Error("Groq returned no content");
-
-    return { text, provider: "groq-openai-gpt-oss-120b" };
+    throw new Error("Groq rate limit persisted after retry");
 }
