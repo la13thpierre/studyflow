@@ -10,13 +10,9 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "No notes provided" });
         }
 
-        const prompt = `Summarise these revision notes into short bullet points:
-
-${notes}`;
-
         let summary, provider;
         try {
-            const result = await generateAIContent(prompt);
+            const result = await summariseNotes(notes);
             summary = result.text;
             provider = result.provider;
         } catch (err) {
@@ -28,6 +24,41 @@ ${notes}`;
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
+}
+
+// Roughly 4 characters per token — keep chunks safely under Groq's 8000 TPM limit
+const CHUNK_CHAR_LIMIT = 12000; // ~3000 tokens per chunk, leaves headroom for prompt + output
+
+function chunkText(text, maxChars = CHUNK_CHAR_LIMIT) {
+    const chunks = [];
+    for (let i = 0; i < text.length; i += maxChars) {
+        chunks.push(text.slice(i, i + maxChars));
+    }
+    return chunks;
+}
+
+async function summariseNotes(notes) {
+    const chunks = chunkText(notes);
+
+    // Short notes: summarise directly, no need to chunk
+    if (chunks.length === 1) {
+        const prompt = `Summarise these revision notes into short bullet points:\n\n${notes}`;
+        return await generateAIContent(prompt);
+    }
+
+    // Long notes: summarise each chunk, then combine into one final summary
+    const chunkSummaries = [];
+
+    for (const chunk of chunks) {
+        const prompt = `Summarise this section of revision notes into short bullet points:\n\n${chunk}`;
+        const result = await generateAIContent(prompt);
+        chunkSummaries.push(result.text);
+    }
+
+    const combinePrompt = `Combine and condense these section summaries into one clean, well-organised set of bullet point revision notes. Remove repetition, keep it concise:\n\n${chunkSummaries.join("\n\n")}`;
+    const finalResult = await generateAIContent(combinePrompt);
+
+    return finalResult;
 }
 
 // Tries Gemini (2 models, short retry), falls back to Groq if both are overloaded
@@ -78,5 +109,5 @@ async function generateAIContent(prompt) {
     const text = groqData.choices?.[0]?.message?.content;
     if (!text) throw new Error("Groq returned no content");
 
-    return { text, provider: "groq-llama-3.3-70b" };
+    return { text, provider: "groq-openai-gpt-oss-120b" };
 }
