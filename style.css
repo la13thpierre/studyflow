@@ -481,3 +481,27 @@ body {
     }
 }
 
+.difficulty-btn {
+    background-color: #334155;
+    color: #CBD5E1;
+    border: 2px solid transparent;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin: 0 6px;
+}
+
+.difficulty-btn:hover {
+    background-color: #475569;
+    color: white;
+}
+
+.difficulty-btn.active {
+    background-color: #2563EB;
+    color: white;
+    border-color: #60A5FA;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
