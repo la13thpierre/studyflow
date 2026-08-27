@@ -63,6 +63,7 @@ async function summariseNotes(notes) {
 }
 
 // Tries Gemini (2 models, short retry), falls back to Groq (with rate-limit retry) if both are overloaded
+// Tries Gemini (2 models, 6s timeout each — no waiting), falls back to Groq (with rate-limit retry) if both fail/timeout
 const GEMINI_MODELS = ["gemini-flash-latest", "gemini-2.5-flash-lite"];
 const GEMINI_TIMEOUT_MS = 6000;
 
@@ -90,10 +91,8 @@ async function generateAIContent(prompt) {
                 const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) return { text, provider: model };
             }
-            // any non-ok response (503, slow, etc) just moves to the next model
         } catch (err) {
             clearTimeout(timeoutId);
-            // timeout or network error — move to next model
         }
     }
 
