@@ -348,7 +348,14 @@ body {
     backface-visibility: hidden;
     padding: 20px;
     box-sizing: border-box;
+    overflow-y: auto;
 }
+
+.flashcard-back p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
 
 .flashcard-back {
     transform: rotateY(180deg);
