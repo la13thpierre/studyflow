@@ -23,13 +23,23 @@ export default async function handler(req, res) {
 Difficulty: ${level}. ${difficultyInstructions[level]}
 
 Do NOT use markdown, asterisks, or bold formatting. Plain text only.
-Format exactly like this for each question:
+
+Generate a mix: 3 multiple choice questions and 2 true/false questions, in any order.
+
+For multiple choice questions, format exactly like this:
 
 Question: ...
 A) ...
 B) ...
 C) ...
 D) ...
+Correct: A
+
+For true/false questions, format exactly like this (only two options, True and False):
+
+Question: ...
+A) True
+B) False
 Correct: A
 
 Notes:

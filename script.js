@@ -293,16 +293,20 @@ function parseQuiz(text) {
         const questionText = section.split("A)")[0].trim();
 
         const optionA = section.split("A)")[1]?.split("B)")[0]?.trim();
-        const optionB = section.split("B)")[1]?.split("C)")[0]?.trim();
-        const optionC = section.split("C)")[1]?.split("D)")[0]?.trim();
-        const optionD = section.split("D)")[1]?.split("Correct:")[0]?.trim();
+        const optionB = section.split("B)")[1]?.split(/C\)|Correct:/)[0]?.trim();
+        const optionCRaw = section.includes("C)") ? section.split("C)")[1]?.split(/D\)|Correct:/)[0]?.trim() : null;
+        const optionDRaw = section.includes("D)") ? section.split("D)")[1]?.split("Correct:")[0]?.trim() : null;
+
+        const options = [optionA, optionB];
+        if (optionCRaw) options.push(optionCRaw);
+        if (optionDRaw) options.push(optionDRaw);
 
         const answerLetter = correctMatch[1].toUpperCase();
         const answerIndex = { A: 0, B: 1, C: 2, D: 3 }[answerLetter];
 
         cards.push({
             question: questionText,
-            options: [optionA, optionB, optionC, optionD],
+            options: options,
             answer: answerIndex
         });
     });
@@ -675,12 +679,20 @@ let score = 0;
 
 function loadQuestion() {
 
+    const currentOptions = quizData[currentQuestion].options;
+
     quizQuestion.textContent = quizData[currentQuestion].question;
 
-    option0.textContent = quizData[currentQuestion].options[0];
-    option1.textContent = quizData[currentQuestion].options[1];
-    option2.textContent = quizData[currentQuestion].options[2];
-    option3.textContent = quizData[currentQuestion].options[3];
+    quizButtons.forEach((btn, index) => {
+        if (index < currentOptions.length) {
+            btn.textContent = currentOptions[index];
+            btn.style.display = "block";
+            btn.disabled = false;
+            btn.style.backgroundColor = "";
+        } else {
+            btn.style.display = "none";
+        }
+    });
 
     document.getElementById("question-counter").textContent =
     "Question " + (currentQuestion + 1) + " / " + quizData.length;
@@ -703,10 +715,7 @@ nextQuestionBtn.addEventListener("click", async function () {
 
         quizQuestion.innerHTML = "🎉 Quiz Complete!";
 
-        option0.style.display = "none";
-        option1.style.display = "none";
-        option2.style.display = "none";
-        option3.style.display = "none";
+        quizButtons.forEach(btn => btn.style.display = "none");
 nextQuestionBtn.innerHTML =
             "Score: " + score + " / " + quizData.length;
 
