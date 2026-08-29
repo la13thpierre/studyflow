@@ -540,3 +540,12 @@ body {
     border-color: #60A5FA;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
+
+.mnemonic-hint {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+    font-style: italic;
+    color: #FBBF24;
+}

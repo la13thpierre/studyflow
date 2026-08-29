@@ -278,19 +278,24 @@ function parseFlashcards(text) {
     sections.forEach(section => {
         if (section.trim() === "") return;
 
-        const parts = section.split("Answer:");
+        const afterQuestion = section.split("Answer:");
+        if (afterQuestion.length < 2) return;
 
-        if (parts.length === 2) {
-            cards.push({
-                question: parts[0].trim(),
-                answer: parts[1].trim()
-            });
-        }
+        const questionText = afterQuestion[0].trim();
+
+        const afterAnswer = afterQuestion[1].split("Mnemonic:");
+        const answerText = afterAnswer[0].trim();
+        const mnemonicText = afterAnswer[1] ? afterAnswer[1].trim() : "";
+
+        cards.push({
+            question: questionText,
+            answer: answerText,
+            mnemonic: mnemonicText
+        });
     });
 
     return cards;
 }
-
 function parseQuiz(text) {
     const cleanText = text.replace(/\*\*/g, "");
     const cards = [];
@@ -549,7 +554,7 @@ function displayFlashcards(cards) {
             flashcard.classList.add("active-card");
         }
 
-        flashcard.innerHTML = `
+                flashcard.innerHTML = `
             <div class="flashcard-inner">
 
                 <div class="flashcard-front">
@@ -560,11 +565,12 @@ function displayFlashcards(cards) {
                 <div class="flashcard-back">
                     <h2>Answer</h2>
                     <p>${card.answer}</p>
+                    ${card.mnemonic ? `<p class="mnemonic-hint">💡 ${card.mnemonic}</p>` : ""}
                 </div>
 
             </div>
         `;
-
+        
         flashcard.addEventListener("click", function () {
             flashcard.classList.toggle("flip");
         });
