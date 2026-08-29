@@ -4,13 +4,14 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { notes, difficulty } = req.body;
+        const { notes, difficulty, quizType } = req.body;
 
         if (!notes) {
             return res.status(400).json({ error: "No notes provided" });
         }
 
         const level = difficulty || "Medium";
+        const type = quizType || "Mixed";
 
         const difficultyInstructions = {
             Easy: "Make the questions simple, testing basic recall of facts.",
@@ -18,13 +19,28 @@ export default async function handler(req, res) {
             Hard: "Make the questions difficult, testing deep understanding, edge cases, and critical thinking."
         };
 
-        const prompt = `Turn these revision notes into 5 multiple choice quiz questions.
+        const formatInstructions = {
+            MultipleChoice: `Generate 5 multiple choice questions.
 
-Difficulty: ${level}. ${difficultyInstructions[level]}
+Format exactly like this for each question:
 
-Do NOT use markdown, asterisks, or bold formatting. Plain text only.
+Question: ...
+A) ...
+B) ...
+C) ...
+D) ...
+Correct: A`,
 
-Generate a mix: 3 multiple choice questions and 2 true/false questions, in any order.
+            TrueFalse: `Generate 5 true/false questions.
+
+Format exactly like this for each question (only two options, True and False):
+
+Question: ...
+A) True
+B) False
+Correct: A`,
+
+            Mixed: `Generate a mix: 3 multiple choice questions and 2 true/false questions, in any order.
 
 For multiple choice questions, format exactly like this:
 
@@ -40,7 +56,16 @@ For true/false questions, format exactly like this (only two options, True and F
 Question: ...
 A) True
 B) False
-Correct: A
+Correct: A`
+        };
+
+        const prompt = `Turn these revision notes into a quiz.
+
+Difficulty: ${level}. ${difficultyInstructions[level]}
+
+Do NOT use markdown, asterisks, or bold formatting. Plain text only.
+
+${formatInstructions[type]}
 
 Notes:
 ${notes}`;

@@ -103,6 +103,19 @@ document.querySelectorAll(".difficulty-btn").forEach(btn => {
         document.querySelectorAll(".difficulty-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
     });
+
+
+});
+
+let selectedQuizType = "Mixed"; // default
+
+document.querySelectorAll(".quiztype-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+        selectedQuizType = btn.dataset.type;
+
+        document.querySelectorAll(".quiztype-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+    });
 });
 
 
@@ -372,7 +385,7 @@ generateBtn.addEventListener("click", async function () {
         displayFlashcards(aiFlashcards);
         switchView(navFlashcards, viewFlashcards);
 
-        const quizText = await generateAIQuiz(uploadedNotes, selectedDifficulty);
+        const quizText = await generateAIQuiz(uploadedNotes, selectedDifficulty, selectedQuizType);
         quizData = parseQuiz(quizText);
         currentQuestion = 0;
         score = 0;
@@ -642,7 +655,7 @@ document.getElementById("score-counter").textContent =
 
 });
 
-async function generateAIQuiz(notes, difficulty) {
+async function generateAIQuiz(notes, difficulty, quizType) {
 
     const response = await fetch("/api/quiz", {
         method: "POST",
@@ -651,7 +664,8 @@ async function generateAIQuiz(notes, difficulty) {
         },
         body: JSON.stringify({
             notes: notes,
-            difficulty: difficulty
+            difficulty: difficulty,
+            quizType: quizType
         })
     });
 
@@ -780,7 +794,7 @@ regenFlashcardsBtn.addEventListener('click', async function () {
 regenQuizBtn.addEventListener('click', async function () {
     regenQuizBtn.disabled = true;
     regenQuizBtn.textContent = "⏳ Regenerating...";
-    const quizText = await generateAIQuiz(uploadedNotes, selectedDifficulty);
+   const quizText = await generateAIQuiz(uploadedNotes, selectedDifficulty, selectedQuizType);
     quizData = parseQuiz(quizText);
     currentQuestion = 0;
     score = 0;
