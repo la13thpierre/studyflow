@@ -12,6 +12,8 @@ export default async function handler(req, res) {
 
         const prompt = `Turn these revision notes into 5 flashcards.
 
+Keep each answer concise — 1-2 short sentences maximum, even if the source notes list many examples or sub-points. Summarise the key idea rather than listing everything.
+
 For each flashcard, also include a short, memorable mnemonic (a phrase, acronym, or association) to help remember the answer. If the answer has multiple parts or steps, make the mnemonic help remember the list or order of those parts rather than the exact wording.
 
 Format exactly like this:

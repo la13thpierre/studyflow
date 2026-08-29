@@ -398,9 +398,12 @@ generateBtn.addEventListener("click", async function () {
             loadQuestion();
         }
 
-        const li = document.createElement("li");
-        li.textContent = summary;
-        summaryPoints.appendChild(li);
+        const points = summary.split(/\n+/).map(line => line.replace(/^-\s*/, "").trim()).filter(line => line.length > 0);
+        points.forEach(point => {
+            const li = document.createElement("li");
+            li.textContent = point;
+            summaryPoints.appendChild(li);
+        });
 
         btnSpinner.style.display = 'none';
         btnText.textContent = 'Summary Complete! ✓';
@@ -570,7 +573,7 @@ function displayFlashcards(cards) {
 
             </div>
         `;
-        
+
         flashcard.addEventListener("click", function () {
             flashcard.classList.toggle("flip");
         });
@@ -780,9 +783,12 @@ regenSummaryBtn.addEventListener('click', async function () {
     regenSummaryBtn.textContent = "⏳ Regenerating...";
     const summary = await generateAISummary(uploadedNotes);
     summaryPoints.innerHTML = "";
-    const li = document.createElement("li");
-    li.textContent = summary;
-    summaryPoints.appendChild(li);
+    const points = summary.split(/\n+/).map(line => line.replace(/^-\s*/, "").trim()).filter(line => line.length > 0);
+    points.forEach(point => {
+        const li = document.createElement("li");
+        li.textContent = point;
+        summaryPoints.appendChild(li);
+    });
     regenSummaryBtn.disabled = false;
     regenSummaryBtn.textContent = "🔄 New Summary";
 });
