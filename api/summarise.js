@@ -48,7 +48,7 @@ async function summariseNotes(notes) {
     const chunkSummaries = [];
 
     for (let i = 0; i < chunks.length; i++) {
-       const prompt = `Summarise this section of revision notes into short bullet points. Start each point on a new line with a dash (-). Do not use markdown or asterisks.\n\n${chunk}`;
+      const prompt = `Summarise this section of revision notes into short bullet points. Start each point on a new line with a dash (-). Do not use markdown or asterisks.\n\n${chunks[i]}`;
         const result = await generateAIContent(prompt);
         chunkSummaries.push(result.text);
 
