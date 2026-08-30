@@ -91,6 +91,20 @@ async function checkAuthState() {
 }
 
 checkAuthState();
+const hamburgerBtn = document.getElementById('hamburger-btn');
+const navLinks = document.getElementById('nav-links');
+
+hamburgerBtn.addEventListener('click', function () {
+    navLinks.classList.toggle('open');
+});
+
+// Close the mobile menu after tapping any nav link
+navLinks.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        navLinks.classList.remove('open');
+    });
+});
+
 
 let uploadedNotes = "";
 let flashcards = [];
