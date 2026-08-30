@@ -827,6 +827,7 @@ const reviewEmpty = document.getElementById('review-empty');
 
 let reviewQueue = [];
 let currentReviewCard = null;
+let totalReviewCount = 0;
 
 navReview.addEventListener('click', async function () {
     switchView(navReview, viewReview);
@@ -859,20 +860,30 @@ async function loadReviewQueue() {
     }
 
     reviewQueue = dueCards || [];
+    totalReviewCount = reviewQueue.length;
     showNextReviewCard();
 }
 
 function showNextReviewCard() {
+    const reviewProgress = document.getElementById('review-progress');
+    const reviewFeedback = document.getElementById('review-feedback');
+
     if (reviewQueue.length === 0) {
         reviewCardContainer.innerHTML = "";
         reviewControls.style.display = 'none';
         reviewEmpty.style.display = 'block';
+        reviewProgress.textContent = "";
+        reviewFeedback.style.display = 'none';
         currentReviewCard = null;
         return;
     }
 
     reviewEmpty.style.display = 'none';
     reviewControls.style.display = 'block';
+    reviewFeedback.style.display = 'none';
+
+    const cardsDone = totalReviewCount - reviewQueue.length;
+    reviewProgress.textContent = `Card ${cardsDone + 1} of ${totalReviewCount}`;
 
     currentReviewCard = reviewQueue[0];
 

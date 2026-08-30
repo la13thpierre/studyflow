@@ -217,6 +217,7 @@
     <div class="container">
         <h1>Review</h1>
         <p class="description">Cards due for review today.</p>
+        <p id="review-progress"></p>
 
         <div id="review-empty" style="display:none;">
             <p>🎉 No cards due right now — check back later!</p>
@@ -224,12 +225,15 @@
 
         <div id="review-card-container"></div>
 
+        <p id="review-feedback" style="display:none;"></p>
+
         <div id="review-controls" style="display:none; margin-top:20px;">
             <button id="review-didnt-know" class="action-btn" style="background-color:#EF4444;">Didn't Know It</button>
             <button id="review-got-it" class="action-btn" style="background-color:#10B981;">Got It</button>
         </div>
     </div>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
