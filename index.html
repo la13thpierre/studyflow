@@ -236,6 +236,20 @@
     </div>
 </div>
 
+<div id="view-tutor" class="app-view" style="display:none;">
+    <div class="container">
+        <h1>AI Tutor</h1>
+        <p class="description">Ask questions about your uploaded notes.</p>
+
+        <div id="tutor-chat" style="max-width:600px; margin:20px auto; text-align:left; min-height:200px;"></div>
+
+        <div style="display:flex; gap:10px; max-width:600px; margin:20px auto;">
+            <input type="text" id="tutor-input" placeholder="Ask a question about your notes..." style="flex:1; padding:12px; border-radius:8px; border:none; background:#1e293b; color:white;" />
+            <button id="tutor-send-btn" class="action-btn" style="margin-top:0;">Send</button>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>

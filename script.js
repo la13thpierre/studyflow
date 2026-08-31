@@ -957,3 +957,103 @@ document.getElementById('review-got-it').addEventListener('click', function () {
 document.getElementById('review-didnt-know').addEventListener('click', function () {
     answerReviewCard(false);
 });
+
+const navTutor = document.getElementById('nav-tutor');
+const viewTutor = document.getElementById('view-tutor');
+const tutorChat = document.getElementById('tutor-chat');
+const tutorInput = document.getElementById('tutor-input');
+const tutorSendBtn = document.getElementById('tutor-send-btn');
+
+let tutorHistory = [];
+
+navTutor.addEventListener('click', function () {
+    switchView(navTutor, viewTutor);
+});
+
+function appendTutorMessage(role, content) {
+    const bubble = document.createElement('div');
+    bubble.style.margin = "10px 0";
+    bubble.style.padding = "12px 16px";
+    bubble.style.borderRadius = "12px";
+    bubble.style.maxWidth = "80%";
+    bubble.style.lineHeight = "1.5";
+
+    if (role === "user") {
+        bubble.style.backgroundColor = "#2563EB";
+        bubble.style.color = "white";
+        bubble.style.marginLeft = "auto";
+        bubble.style.textAlign = "right";
+    } else {
+        bubble.style.backgroundColor = "#1E293B";
+        bubble.style.color = "#CBD5E1";
+        bubble.style.marginRight = "auto";
+    }
+
+    bubble.textContent = content;
+    tutorChat.appendChild(bubble);
+    tutorChat.scrollTop = tutorChat.scrollHeight;
+}
+
+async function sendTutorQuestion() {
+    const question = tutorInput.value.trim();
+    if (!question) return;
+
+    if (!uploadedNotes) {
+        appendTutorMessage("tutor", "Please upload notes first so I have something to answer questions about.");
+        return;
+    }
+
+    appendTutorMessage("user", question);
+    tutorInput.value = "";
+    tutorSendBtn.disabled = true;
+
+    const thinkingBubble = document.createElement('div');
+    thinkingBubble.id = "tutor-thinking";
+    thinkingBubble.style.margin = "10px 0";
+    thinkingBubble.style.color = "#94A3B8";
+    thinkingBubble.style.fontStyle = "italic";
+    thinkingBubble.textContent = "Thinking...";
+    tutorChat.appendChild(thinkingBubble);
+    tutorChat.scrollTop = tutorChat.scrollHeight;
+
+    try {
+        const response = await fetch("/api/tutor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                notes: uploadedNotes,
+                history: tutorHistory,
+                question: question
+            })
+        });
+
+        const data = await response.json();
+
+        document.getElementById("tutor-thinking")?.remove();
+
+        if (!response.ok) {
+            appendTutorMessage("tutor", "⚠️ " + (data.error || "Something went wrong — try again."));
+            tutorSendBtn.disabled = false;
+            return;
+        }
+
+        appendTutorMessage("tutor", data.answer);
+
+        tutorHistory.push({ role: "user", content: question });
+        tutorHistory.push({ role: "tutor", content: data.answer });
+
+    } catch (error) {
+        document.getElementById("tutor-thinking")?.remove();
+        appendTutorMessage("tutor", "⚠️ Connection error — try again.");
+    }
+
+    tutorSendBtn.disabled = false;
+}
+
+tutorSendBtn.addEventListener('click', sendTutorQuestion);
+
+tutorInput.addEventListener('keydown', function (e) {
+    if (e.key === "Enter") {
+        sendTutorQuestion();
+    }
+});
