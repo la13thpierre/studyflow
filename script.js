@@ -963,6 +963,12 @@ const viewTutor = document.getElementById('view-tutor');
 const tutorChat = document.getElementById('tutor-chat');
 const tutorInput = document.getElementById('tutor-input');
 const tutorSendBtn = document.getElementById('tutor-send-btn');
+const tutorClearBtn = document.getElementById('tutor-clear-btn');
+
+tutorClearBtn.addEventListener('click', function () {
+    tutorChat.innerHTML = "";
+    tutorHistory = [];
+});
 
 let tutorHistory = [];
 
