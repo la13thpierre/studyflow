@@ -355,6 +355,14 @@ generateBtn.addEventListener("click", async function () {
 
     try {
         const summary = await generateAISummary(uploadedNotes);
+                const points = summary.split(/\n+/).map(line => line.replace(/^-\s*/, "").trim()).filter(line => line.length > 0);
+        points.forEach(point => {
+            const li = document.createElement("li");
+            li.textContent = point;
+            summaryPoints.appendChild(li);
+        });
+
+        btnText.textContent = 'Generating flashcards...';
 
         const { data: { user } } = await supabaseClient.auth.getUser();
         currentUser = user;
@@ -403,6 +411,8 @@ generateBtn.addEventListener("click", async function () {
         const aiFlashcards = parseFlashcards(flashcardText);
         displayFlashcards(aiFlashcards);
         switchView(navFlashcards, viewFlashcards);
+                   btnText.textContent = 'Generating quiz...';
+   
 
         const quizText = await generateAIQuiz(uploadedNotes, selectedDifficulty, selectedQuizType);
         quizData = parseQuiz(quizText);
@@ -412,12 +422,7 @@ generateBtn.addEventListener("click", async function () {
             loadQuestion();
         }
 
-        const points = summary.split(/\n+/).map(line => line.replace(/^-\s*/, "").trim()).filter(line => line.length > 0);
-        points.forEach(point => {
-            const li = document.createElement("li");
-            li.textContent = point;
-            summaryPoints.appendChild(li);
-        });
+      
 
         btnSpinner.style.display = 'none';
         btnText.textContent = 'Summary Complete! ✓';
