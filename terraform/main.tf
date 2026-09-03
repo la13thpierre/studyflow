@@ -11,6 +11,21 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
 # Security group: allow SSH (22) and HTTP (your app's port, e.g. 3000)
 resource "aws_security_group" "studyflow_sg" {
   name        = "studyflow-sg"
@@ -21,7 +36,7 @@ resource "aws_security_group" "studyflow_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.my_ip]
   }
 
   ingress {
@@ -42,7 +57,7 @@ resource "aws_security_group" "studyflow_sg" {
 
 # EC2 instance running Amazon Linux 2023, pulls & runs your Docker image on boot
 resource "aws_instance" "studyflow_server" {
-  ami                    = "ami-0182f373e66f89c85" # Amazon Linux 2023, us-east-1 — verify latest before applying
+  ami                    = data.aws_ami.amazon_linux.id
   instance_type          = "t3.micro"               # Free Tier eligible
   vpc_security_group_ids = [aws_security_group.studyflow_sg.id]
 
@@ -53,7 +68,12 @@ resource "aws_instance" "studyflow_server" {
               systemctl start docker
               systemctl enable docker
               docker pull la13th/studyflow:latest
-              docker run -d -p 3000:3000 la13th/studyflow:latest
+              docker run -d -p 3000:3000 \
+                -e GEMINI_API_KEY="${var.gemini_api_key}" \
+                -e GROQ_API_KEY="${var.groq_api_key}" \
+                -e SUPABASE_URL="${var.supabase_url}" \
+                -e SUPABASE_ANON_KEY="${var.supabase_anon_key}" \
+                la13th/studyflow:latest
               EOF
 
   tags = {
