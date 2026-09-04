@@ -926,15 +926,23 @@ function showNextReviewCard() {
     });
 }
 
-async function answerReviewCard(gotIt) {
+async function answerReviewCard(rating) {
     if (!currentReviewCard) return;
 
+    const currentInterval = currentReviewCard.interval_days || 1;
     let newInterval;
-    if (gotIt) {
-        newInterval = Math.min((currentReviewCard.interval_days || 1) * 2, 60);
-    } else {
+
+    if (rating === "again") {
         newInterval = 1;
+    } else if (rating === "hard") {
+        newInterval = Math.min(Math.max(currentInterval * 1.2, 1), 60);
+    } else if (rating === "good") {
+        newInterval = Math.min(currentInterval * 2, 60);
+    } else if (rating === "easy") {
+        newInterval = Math.min(currentInterval * 3, 60);
     }
+
+    newInterval = Math.round(newInterval);
 
     const nextDate = new Date();
     nextDate.setDate(nextDate.getDate() + newInterval);
@@ -955,12 +963,20 @@ async function answerReviewCard(gotIt) {
     showNextReviewCard();
 }
 
-document.getElementById('review-got-it').addEventListener('click', function () {
-    answerReviewCard(true);
+document.getElementById('review-again').addEventListener('click', function () {
+    answerReviewCard("again");
 });
 
-document.getElementById('review-didnt-know').addEventListener('click', function () {
-    answerReviewCard(false);
+document.getElementById('review-hard').addEventListener('click', function () {
+    answerReviewCard("hard");
+});
+
+document.getElementById('review-good').addEventListener('click', function () {
+    answerReviewCard("good");
+});
+
+document.getElementById('review-easy').addEventListener('click', function () {
+    answerReviewCard("easy");
 });
 
 const navTutor = document.getElementById('nav-tutor');
