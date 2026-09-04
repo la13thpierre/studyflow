@@ -981,6 +981,64 @@ navTutor.addEventListener('click', function () {
     switchView(navTutor, viewTutor);
 });
 
+const tutorSuggestions = document.getElementById('tutor-suggestions');
+let suggestionsLoadedFor = null;
+
+navTutor.addEventListener('click', async function () {
+    if (uploadedNotes && suggestionsLoadedFor !== uploadedNotes) {
+        await loadTutorSuggestions();
+    }
+});
+
+async function loadTutorSuggestions() {
+    tutorSuggestions.innerHTML = "";
+
+    try {
+        const response = await fetch("/api/tutor-suggestions", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ notes: uploadedNotes })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return;
+        }
+
+        const cleanText = data.suggestions.replace(/\*\*/g, "");
+        const questions = cleanText
+            .split("Question:")
+            .map(q => q.trim())
+            .filter(q => q.length > 0);
+
+        questions.forEach(question => {
+            const chip = document.createElement('button');
+            chip.textContent = question;
+            chip.style.backgroundColor = "#334155";
+            chip.style.color = "#CBD5E1";
+            chip.style.border = "none";
+            chip.style.borderRadius = "20px";
+            chip.style.padding = "8px 14px";
+            chip.style.fontSize = "13px";
+            chip.style.cursor = "pointer";
+            chip.style.marginTop = "0";
+
+            chip.addEventListener('click', function () {
+                tutorInput.value = question;
+                sendTutorQuestion();
+            });
+
+            tutorSuggestions.appendChild(chip);
+        });
+
+        suggestionsLoadedFor = uploadedNotes;
+
+    } catch (error) {
+        console.error("Failed to load tutor suggestions:", error);
+    }
+}
+
 function appendTutorMessage(role, content) {
     const bubble = document.createElement('div');
     bubble.style.margin = "10px 0";
