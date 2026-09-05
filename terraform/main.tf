@@ -26,7 +26,7 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-# Security group: allow SSH (22) and HTTP (your app's port, e.g. 3000)
+# Security group: allow SSH (22) and HTTP (port 80)
 resource "aws_security_group" "studyflow_sg" {
   name        = "studyflow-sg"
   description = "Allow SSH and app traffic"
@@ -41,8 +41,8 @@ resource "aws_security_group" "studyflow_sg" {
 
   ingress {
     description = "App port"
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -68,7 +68,7 @@ resource "aws_instance" "studyflow_server" {
               systemctl start docker
               systemctl enable docker
               docker pull la13th/studyflow:latest
-              docker run -d -p 3000:3000 \
+              docker run -d -p 80:3000 \
                 -e GEMINI_API_KEY="${var.gemini_api_key}" \
                 -e GROQ_API_KEY="${var.groq_api_key}" \
                 -e SUPABASE_URL="${var.supabase_url}" \
