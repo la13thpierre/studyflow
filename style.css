@@ -1,5 +1,7 @@
 body{
-    background:#111827;
+    background: radial-gradient(circle at 20% 20%, rgba(99,102,241,0.15), transparent 40%),
+                radial-gradient(circle at 80% 0%, rgba(236,72,153,0.12), transparent 40%),
+                #111827;
     color:white;
     font-family:Arial, Helvetica, sans-serif;
     text-align:center;
@@ -38,11 +40,15 @@ button {
 h1 {
     font-size: 56px;
     margin-bottom: 10px;
+    background: linear-gradient(90deg, #38BDF8, #A78BFA, #F472B6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 .subtitle {
     font-size: 24px;
     font-weight: bold;
-    color: #38BDF8;
+    color: #FBBF24;
     margin-bottom: 20px;
 }
 .description {
@@ -52,7 +58,7 @@ h1 {
     margin-bottom: 40px;
 }
 button {
-    background-color: #2563EB;
+    background: linear-gradient(135deg, #6366F1, #EC4899);
     color: white;
     border: none;
     padding: 16px 36px;
@@ -60,9 +66,10 @@ button {
     border-radius: 12px;
     cursor: pointer;
     transition: 0.3s;
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.3);
 }
 button:hover {
-    background-color: #1D4ED8;
+    background: linear-gradient(135deg, #4F46E5, #DB2777);
     transform: scale(1.05);
 }
 .features {
@@ -80,15 +87,26 @@ button:hover {
     border-radius: 18px;
     transition: 0.3s;
     box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    border-top: 4px solid #38BDF8;
 }
-
+.card:nth-child(2) { border-top-color: #A78BFA; }
+.card:nth-child(3) { border-top-color: #F472B6; }
 .card:hover {
     transform: translateY(-8px);
 }
 
 .icon {
-    font-size: 40px;
+    font-size: 32px;
     margin-bottom: 20px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(167,139,250,0.15));
 }
 
 .card h3 {
@@ -103,9 +121,8 @@ button:hover {
 }
 
 
-
 .upload-btn {
-    background-color: #1a56db;
+    background: linear-gradient(135deg, #38BDF8, #6366F1);
     color: white;
     padding: 12px 24px;
     border-radius: 8px;
@@ -114,13 +131,12 @@ button:hover {
     cursor: pointer;
     display: inline-block;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 10px rgba(26, 86, 219, 0.2);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
 }
 
 .upload-btn:hover {
-    background-color: #1e40af;
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(26, 86, 219, 0.3);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
 
@@ -131,7 +147,7 @@ button:hover {
     font-weight: 500;
 }
 .action-btn {
-    background-color: #10B981;
+    background: linear-gradient(135deg, #10B981, #34D399);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -142,11 +158,12 @@ button:hover {
     transition: all 0.2s ease;
     display: inline-block;
     margin-top: 15px;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
 }
 
 .action-btn:hover {
-    background-color: #059669;
     transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
 }
 
 .summary-box {
@@ -223,8 +240,8 @@ button:hover {
 
 .nav-btn.active {
     color: white;
-    background-color: #2563eb;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    background: linear-gradient(135deg, #6366F1, #EC4899);
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
 }
 
 body {
@@ -359,6 +376,7 @@ body {
 
 .flashcard-back {
     transform: rotateY(180deg);
+    background: linear-gradient(135deg, #065f46, #059669);
 }
 
 .flashcard-controls{
@@ -441,7 +459,7 @@ body {
 
 .quiz-btn:hover{
 
-    background:#475569;
+    background: linear-gradient(135deg, #6366F1, #EC4899);
 
 }
 
@@ -507,10 +525,10 @@ body {
 }
 
 .difficulty-btn.active {
-    background-color: #2563EB;
+    background: linear-gradient(135deg, #6366F1, #EC4899);
     color: white;
-    border-color: #60A5FA;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    border-color: #F472B6;
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35);
 }
 .quiztype-selector {
     margin-top: 15px;
@@ -535,10 +553,10 @@ body {
 }
 
 .quiztype-btn.active {
-    background-color: #2563EB;
+    background: linear-gradient(135deg, #38BDF8, #A78BFA);
     color: white;
-    border-color: #60A5FA;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    border-color: #A78BFA;
+    box-shadow: 0 4px 14px rgba(167, 139, 250, 0.35);
 }
 
 .mnemonic-hint {
