@@ -651,3 +651,66 @@ body {
     width: 180px;
     padding: 20px;
 }
+
+.review-again-btn {
+    background: linear-gradient(135deg, #EF4444, #F87171);
+    margin-top: 0;
+}
+.review-hard-btn {
+    background: linear-gradient(135deg, #F59E0B, #FBBF24);
+    margin-top: 0;
+}
+.review-good-btn {
+    background: linear-gradient(135deg, #10B981, #34D399);
+    margin-top: 0;
+}
+.review-easy-btn {
+    background: linear-gradient(135deg, #2563EB, #60A5FA);
+    margin-top: 0;
+}
+
+.auth-input {
+    background-color: #1e293b;
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    margin: 0 6px 10px;
+    transition: border-color 0.2s ease;
+}
+.auth-input::placeholder {
+    color: #64748B;
+}
+.auth-input:focus {
+    outline: none;
+    border-color: #A78BFA;
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+}
+
+.social-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    transition: all 0.2s ease;
+}
+.google-btn {
+    background-color: white;
+    color: #3c4043;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+.google-btn:hover {
+    box-shadow: 0 4px 16px rgba(167, 139, 250, 0.3);
+    transform: translateY(-1px);
+}
+.facebook-btn {
+    background-color: #1877F2;
+    color: white;
+    box-shadow: 0 4px 14px rgba(24, 119, 242, 0.3);
+}
+.facebook-btn:hover {
+    background-color: #166FE0;
+    box-shadow: 0 6px 18px rgba(24, 119, 242, 0.4);
+    transform: translateY(-1px);
+}

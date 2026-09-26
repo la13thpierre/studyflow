@@ -28,16 +28,16 @@
 
 <div id="auth-container" style="text-align:center; padding: 20px; display:none;">
     <div id="auth-logged-out">
-        <input type="email" id="auth-email" placeholder="Email" />
-        <input type="password" id="auth-password" placeholder="Password" />
+       <input type="email" id="auth-email" class="auth-input" placeholder="Email" />
+<input type="password" id="auth-password" class="auth-input" placeholder="Password" />
         <button id="signup-btn" class="action-btn">Sign Up</button>
         <button id="login-btn" class="action-btn">Log In</button>
         <br>
-      <button id="google-login-btn" class="action-btn" style="background-color:white; color:#3c4043; display:inline-flex; align-items:center; gap:10px; padding:10px 20px;">
+<button id="google-login-btn" class="action-btn social-btn google-btn">
     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:18px; height:18px;">
     Sign in with Google
 </button>
-<button id="facebook-login-btn" class="action-btn" style="background-color:#1877F2; color:white; display:inline-flex; align-items:center; gap:10px; padding:10px 20px;">
+<button id="facebook-login-btn" class="action-btn social-btn facebook-btn">
     <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" style="width:18px; height:18px;">
     Sign in with Facebook
 </button>
@@ -230,11 +230,11 @@
 
         <p id="review-feedback" style="display:none;"></p>
 
-        <div id="review-controls" style="display:none; margin-top:20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-    <button id="review-again" class="action-btn" style="background-color:#EF4444; margin-top:0;">Again</button>
-    <button id="review-hard" class="action-btn" style="background-color:#F59E0B; margin-top:0;">Hard</button>
-    <button id="review-good" class="action-btn" style="background-color:#10B981; margin-top:0;">Good</button>
-    <button id="review-easy" class="action-btn" style="background-color:#2563EB; margin-top:0;">Easy</button>
+    <div id="review-controls" style="margin-top:20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+    <button id="review-again" class="action-btn review-again-btn">Again</button>
+    <button id="review-hard" class="action-btn review-hard-btn">Hard</button>
+    <button id="review-good" class="action-btn review-good-btn">Good</button>
+    <button id="review-easy" class="action-btn review-easy-btn">Easy</button>
 </div>
 </div>
 
