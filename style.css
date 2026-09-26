@@ -580,12 +580,14 @@ body {
 
 .hamburger-btn {
     display: none;
-    background: none;
+    background: linear-gradient(135deg, #6366F1, #EC4899);
     border: none;
     color: white;
-    font-size: 28px;
+    font-size: 22px;
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 6px 14px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
 }
 
 @media (max-width: 768px) {
@@ -713,4 +715,32 @@ body {
     background-color: #166FE0;
     box-shadow: 0 6px 18px rgba(24, 119, 242, 0.4);
     transform: translateY(-1px);
+}
+
+.tutor-input-row {
+    display: flex;
+    gap: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+.tutor-input {
+    flex: 1;
+    margin: 0;
+}
+.tutor-send-btn {
+    margin-top: 0;
+    background: linear-gradient(135deg, #6366F1, #38BDF8);
+}
+.tutor-send-btn:hover {
+    background: linear-gradient(135deg, #4F46E5, #0EA5E9);
+    transform: translateY(-1px);
+}
+
+.tutor-clear-btn {
+    background: #334155;
+    padding: 8px 16px;
+    font-size: 14px;
+}
+.tutor-clear-btn:hover {
+    background: #475569;
 }
