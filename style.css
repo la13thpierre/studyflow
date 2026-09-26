@@ -91,6 +91,8 @@ button:hover {
 }
 .card:nth-child(2) { border-top-color: #A78BFA; }
 .card:nth-child(3) { border-top-color: #F472B6; }
+#dashboard-stats .card:nth-child(4) { border-top-color: #FBBF24; }
+#dashboard-stats .card:nth-child(5) { border-top-color: #10B981; }
 .card:hover {
     transform: translateY(-8px);
 }
@@ -415,6 +417,8 @@ body {
 
 .active-card{
     display:block;
+}
+
 .quiz-card{
 
     background:#1E293B;
@@ -633,4 +637,17 @@ body {
         width: 100%;
         max-width: 320px;
     }
+}
+
+#dashboard-stats .card h3 {
+    font-size: 32px;
+    background: linear-gradient(135deg, #38BDF8, #A78BFA);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+#dashboard-stats .card {
+    width: 180px;
+    padding: 20px;
 }
