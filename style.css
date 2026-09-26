@@ -242,7 +242,7 @@ button:hover {
 .nav-btn.active {
     color: white;
     background: linear-gradient(135deg, #6366F1, #EC4899);
-    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
+    box-shadow: 0 2px 6px rgba(236, 72, 153, 0.15);
 }
 
 body {
